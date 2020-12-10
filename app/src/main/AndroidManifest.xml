@@ -20,7 +20,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MyCart"></activity>
+        <activity android:name=".ShopFilter"></activity>
+        <activity android:name=".Shops">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ProductList" />
+        <activity android:name=".MyCart" />
         <activity android:name=".UserLogin" />
         <activity android:name=".UserRegistration" />
         <!--
@@ -37,13 +46,7 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:label="@string/title_activity_maps" />
         <activity android:name=".MainActivity" />
     </application>
 

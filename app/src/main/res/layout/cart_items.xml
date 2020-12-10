@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    app:cardBackgroundColor="#FFFFFF"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/linearlayout1"
+        android:layout_height="150dp"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="140dp"
+            android:padding="8dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_centerVertical="true"
+            android:id="@+id/itemimage"
+
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/itemname"
+            android:textSize="17sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="30dp"
+            android:textStyle="bold"
+
+            android:layout_marginLeft="140dp"
+            android:layout_marginRight="120dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="295dp"
+            android:layout_marginTop="30dp"
+            android:paddingRight="5sp"
+            android:text="₹"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="310dp"
+            android:layout_marginTop="30dp"
+            android:paddingRight="5sp"
+            android:id="@+id/itemprice"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+            android:id="@+id/editbutton"
+            android:layout_width="80dp"
+            android:layout_height="26dp"
+            android:layout_marginLeft="290dp"
+            android:layout_marginTop="90dp"
+            android:background="@drawable/button_style"
+            android:textColor="#FFFFFF" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
