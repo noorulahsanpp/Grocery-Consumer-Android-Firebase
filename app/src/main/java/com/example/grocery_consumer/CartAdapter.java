@@ -26,11 +26,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
     private SharedPreferences sharedPreferences;
     ArrayList<String> prices = new ArrayList<>();
     ArrayList<String> images = new ArrayList<>();
-      ArrayList<String> imageurl = new ArrayList<>();
-    float cartvalue = 0;
+    ArrayList<String> imageurl = new ArrayList<>();
+    float cartvalue = 0,total = 0,discount = 0;
     ArrayList<String> num = new ArrayList<>();
     ArrayList<String> name = new ArrayList<>();
-    private CartAdapter adapter;
     public CartAdapter(ArrayList<String> itemno1,ArrayList<String> name1, ArrayList<String> prices1, ArrayList<String> images1) {
         name = name1;
         prices = prices1;
@@ -57,9 +56,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
         holder.topic.setText(name.get(position));
         String itemnum = num.get(position);
               holder.edit.setNumber(itemnum);
-
-        cartvalue = cartvalue +( Float.parseFloat(amount)* Integer.parseInt(itemnum));
+        float pdtprice = ( Float.parseFloat(amount)* Integer.parseInt(itemnum));
+        cartvalue = cartvalue +pdtprice;
                       MyCart.cartvalue.setText("₹ "+cartvalue);
+                      total = total+discount+pdtprice;
+                      MyCart.total.setText("₹ "+total);
     }
 
     @Override
@@ -140,7 +141,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
                     ProductAdapter.prices = prices;
                     ProductAdapter.images = images;
                    ProductAdapter.setProducts();
-MainActivity.setupBadge();
                 }
             });
 

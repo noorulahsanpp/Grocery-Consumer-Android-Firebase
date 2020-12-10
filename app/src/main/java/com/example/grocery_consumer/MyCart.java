@@ -51,7 +51,7 @@ public class MyCart extends AppCompatActivity {
     private String shname,description;
     private String pdtname;
     private Button placeorder;
-   static String storeid ="",storeId,Name,Itemno;
+   static String storeid ="";
      String image;
    static ArrayList<String> images = new ArrayList<>();
     static ArrayList<String> prices = new ArrayList<>();
@@ -69,6 +69,7 @@ public class MyCart extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_cart);
+        getSupportActionBar().hide();
         firebaseFirestore = FirebaseFirestore.getInstance();
         recyclerView = findViewById(R.id.cartview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -151,6 +152,8 @@ public class MyCart extends AppCompatActivity {
         placeorder = findViewById(R.id.placeorder);
         itemlayout = findViewById(R.id.itemlayout);
         cartempty = findViewById(R.id.cartempty);
+
+
     }
     private void getCartProducts(){
 

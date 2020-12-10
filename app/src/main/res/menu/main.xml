@@ -7,7 +7,7 @@
         android:orderInCategory="100"
         app:showAsAction="always"
         app:actionLayout="@layout/badgelayout"
-
+        android:iconTint="@color/appcolor"
         android:title="@string/cart" />
 
 </menu>

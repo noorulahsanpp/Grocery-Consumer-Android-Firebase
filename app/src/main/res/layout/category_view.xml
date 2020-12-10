@@ -9,11 +9,10 @@
     android:layout_below="@+id/stores"
     android:layout_width="100dp"
     android:layout_height="90dp"
-
-    android:layout_marginEnd="8dp"
-    android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
-    app:cardBackgroundColor="#FFFFFF">
+    app:cardBackgroundColor="#FFFFFF"
+    android:layout_marginRight="2dp"
+    android:layout_marginLeft="5dp">
     <RelativeLayout
         android:layout_width="80dp"
         android:layout_height="80dp"

@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Purchase");
         setContentView(R.layout.badgelayout);
         firebaseFirestore = FirebaseFirestore.getInstance();
         getquantity();
