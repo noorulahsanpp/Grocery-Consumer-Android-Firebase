@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,15 +16,16 @@ import static android.media.CamcorderProfile.get;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
     ArrayList<String> arrayList = new ArrayList<>();
-
+    ArrayList<Integer> imagelist = new ArrayList<>();
     String value;
     private ShopAdapter adapter;
 
     String cat = "";
 
-    public CategoryAdapter(ArrayList<String> mNames) {
+    public CategoryAdapter(ArrayList<String> mNames, ArrayList<Integer> mImages) {
 
         arrayList = mNames;
+        imagelist = mImages;
     }
 
 
@@ -37,7 +39,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
         holder.Name.setText(arrayList.get(position));
-
+        holder.icons.setImageResource(imagelist.get(position));
 
     }
 
@@ -51,6 +53,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
 
         TextView Name;
+        ImageView icons;
 
 
         public ViewHolder(View itemView) {
@@ -71,7 +74,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
 
             Name = itemView.findViewById(R.id.category);
-
+            icons = itemView.findViewById(R.id.icons);
         }
     }
 

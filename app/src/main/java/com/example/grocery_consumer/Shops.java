@@ -40,7 +40,7 @@ public class Shops extends MainActivity {
   static   int flag = 0;
 
 
-
+    private ArrayList<Integer> mImages = new ArrayList<>();
     private ArrayList<String> mNames = new ArrayList<>();
     RecyclerView recyclerView;
     @Override
@@ -104,12 +104,20 @@ public class Shops extends MainActivity {
             mNames.add("Bakery");
             mNames.add("Restaurent");
 
+        mImages.add(R.drawable.ic_action_store);
+        mImages.add(R.drawable.ic_action_store);
+        mImages.add(R.drawable.ic_action_electronics);
+        mImages.add(R.drawable.ic_action_grocery);
+        mImages.add(R.drawable.ic_action_store);
+        mImages.add(R.drawable.ic_action_bakery);
+        mImages.add(R.drawable.ic_action_restaurent);
+
         RecyclerView recyclerView1 = findViewById(R.id.category);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView1.setLayoutManager(layoutManager);
         recyclerView1.setHasFixedSize(true);
-        CategoryAdapter categoryAdapter = new CategoryAdapter(mNames);
+        CategoryAdapter categoryAdapter = new CategoryAdapter(mNames,mImages);
         recyclerView1.setAdapter(categoryAdapter);
 
 
