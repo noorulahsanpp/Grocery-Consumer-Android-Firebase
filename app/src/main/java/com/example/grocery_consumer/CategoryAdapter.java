@@ -17,8 +17,6 @@ import static android.media.CamcorderProfile.get;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayList<Integer> imagelist = new ArrayList<>();
-    String value;
-    private ShopAdapter adapter;
 
     String cat = "";
 
@@ -68,17 +66,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
                     view.getContext().startActivity(i);
 
-
                 }
             });
-
 
             Name = itemView.findViewById(R.id.category);
             icons = itemView.findViewById(R.id.icons);
         }
     }
-
-
 
     }
 

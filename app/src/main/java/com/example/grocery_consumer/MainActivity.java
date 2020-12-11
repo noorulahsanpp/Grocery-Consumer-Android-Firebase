@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth mAuth;
     CollectionReference collectionReference;
     static  TextView textCartItemCount;
    static int mCartItemCount;
@@ -32,25 +34,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTitle("Purchase");
         setContentView(R.layout.badgelayout);
+        mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         getquantity();
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-
-
-
-        final MenuItem menuItem = menu.findItem(R.id.action_cart);
-
+         final MenuItem menuItem = menu.findItem(R.id.action_cart);
         View actionView = menuItem.getActionView();
         textCartItemCount = (TextView) actionView.findViewById(R.id.cart_badge);
-
-
-
-
         actionView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +61,10 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.action_cart) {
             startActivity(new Intent(this, MyCart.class));
             return true;
+        }
+        else if(item.getItemId() == R.id.logout)
+        {
+            logout();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -108,6 +106,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+    private void logout(){
+        mAuth.signOut();
+        Intent intent = new Intent(getApplicationContext(), UserLogin.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+        return;
     }
 
  }

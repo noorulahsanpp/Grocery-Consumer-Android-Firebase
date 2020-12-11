@@ -22,15 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
-    public static final String MyPREFERENCES = "MyPrefs";
-    private SharedPreferences sharedPreferences;
+
+
     ArrayList<String> prices = new ArrayList<>();
     ArrayList<String> images = new ArrayList<>();
     ArrayList<String> imageurl = new ArrayList<>();
     float cartvalue = 0,total = 0,discount = 0;
     ArrayList<String> num = new ArrayList<>();
     ArrayList<String> name = new ArrayList<>();
-    public CartAdapter(ArrayList<String> itemno1,ArrayList<String> name1, ArrayList<String> prices1, ArrayList<String> images1) {
+    public CartAdapter(ArrayList<String> itemno1, ArrayList<String> name1, ArrayList<String> prices1, ArrayList<String> images1) {
         name = name1;
         prices = prices1;
         num = itemno1;
@@ -72,7 +72,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
     public class CartHolder extends RecyclerView.ViewHolder {
 
         TextView topic;
-        TextView price, discount;
+        TextView price;
         ImageView image;
         String value;
         ElegantNumberButton edit;
@@ -112,11 +112,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
                             prices.add(p);
                             images.add(i);
                         }
-
                     }
-
                     if (newValue == 0) {
-                //        edit.setEnabled(false);
                         for (int i = 0; i < num.size(); i++) {
                             String n1 = "0";
                             if (n1.equals(num.get(i))) {

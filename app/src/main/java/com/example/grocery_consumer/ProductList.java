@@ -26,16 +26,14 @@ public class ProductList extends MainActivity {
     private RecyclerView recyclerView;
     public static final String MyPREFERENCES = "MyPrefs" ;
     SharedPreferences sharedPreferences;
-    String productname, price;
-    private String image;
     public static  ArrayList<String> itemno = new ArrayList<>();
     public static  ArrayList<String> itemname = new ArrayList<>();
     static ArrayList<String> images = new ArrayList<>();
     static ArrayList<String> prices = new ArrayList<>();
     private ProductAdapter adapter;
     public static FirebaseFirestore firebaseFirestore;
-    public static  CollectionReference collectionReference ,collectionReference1;
-public String storeid,storeId;
+    public static  CollectionReference collectionReference;
+public String storeid,userId;
 static Button addtocart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +42,9 @@ static Button addtocart;
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         Intent intent = getIntent();
+initwidgets();
 
 
-        recyclerView = findViewById(R.id.recyclerview);
-        addtocart = findViewById(R.id.addtocart);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-        recyclerView.setHasFixedSize(true);
         sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
         getSharedPreference();
 
@@ -58,21 +52,18 @@ static Button addtocart;
         getproducts();
 
     }
+public void initwidgets(){
+    recyclerView = findViewById(R.id.recyclerview);
+    addtocart = findViewById(R.id.addtocart);
+    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
+    recyclerView.setHasFixedSize(true);
+}
 
     public void getSharedPreference(){
         sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
-        storeId = sharedPreferences.getString("storeid", "");
+        userId = sharedPreferences.getString("userid", "");
     }
-
-    //    @Override
-////    public boolean onOptionsItemSelected(MenuItem item) {
-////        if (item.getItemId() == R.id.action_cart) {
-////            startActivity(new Intent(this, MyCart.class));
-////            return true;
-////        }
-////        return super.onOptionsItemSelected(item);
-////    }
 
     private void getproducts() {
                    collectionReference = firebaseFirestore.collection("stores").document(storeid).collection("products");
@@ -80,7 +71,7 @@ static Button addtocart;
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(query, Product.class)
                 .build();
-         adapter = new ProductAdapter(options,storeid);
+         adapter = new ProductAdapter(options,storeid,userId);
                recyclerView.setAdapter(adapter);
 
     }

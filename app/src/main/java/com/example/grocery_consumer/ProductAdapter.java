@@ -34,6 +34,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.squareup.picasso.Picasso;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAdapter.ProductHolder> {
     public static final String MyPREFERENCES = "MyPrefs";
     private SharedPreferences sharedPreferences;
@@ -46,18 +48,14 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
     static ArrayList<String> images = new ArrayList<>();
     static ArrayList<String> imageurl = new ArrayList<>();
     static ArrayList<String> prices = new ArrayList<>();
-    static  String storeid;
+    static  String storeid,userId;
 
     static Date date = setDate();
-    public ProductAdapter(@NonNull FirestoreRecyclerOptions<Product> options, String storeid) {
+    public ProductAdapter(@NonNull FirestoreRecyclerOptions<Product> options, String storeid, String userId) {
         super(options);
         this.storeid = storeid;
+        this.userId = userId;
         getCartProducts();
-//         name= itemname;
-//        num = itemno;
-//        images = image;
-//        prices = price;
-
     }
 
 
@@ -66,7 +64,7 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
         firebaseFirestore = FirebaseFirestore.getInstance();
 
        final CollectionReference collectionReference ;
-        collectionReference = firebaseFirestore.collection("customers").document("sBNr4AvrnanDsTAcexKQ").collection("cart");
+        collectionReference = firebaseFirestore.collection("customers").document(userId).collection("cart");
 
         if(!name.isEmpty()){
 
@@ -123,7 +121,7 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
     public static void getCartProducts(){
         FirebaseFirestore firebaseFirestore;
         firebaseFirestore = FirebaseFirestore.getInstance();
-        collectionReference= firebaseFirestore.collection("customers").document("sBNr4AvrnanDsTAcexKQ").collection("cart");
+        collectionReference= firebaseFirestore.collection("customers").document(userId).collection("cart");
         collectionReference.whereEqualTo("status","added to cart").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -204,7 +202,6 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
         String n,i,p;
         int flag =0,flag1 =0;
        // int q = 0;
-
         public ProductHolder(View itemView) {
             super(itemView);
             firebaseFirestore = FirebaseFirestore.getInstance();
@@ -303,6 +300,7 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
 
 
  }
+
 
 
 }
