@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,8 +39,8 @@ public class Shops extends MainActivity {
     public static FirebaseFirestore firebaseFirestore;
     public static CollectionReference collectionReference;
   static   int flag = 0;
-
-
+  String userID,username,phone;
+    private FirebaseAuth mAuth;
     private ArrayList<Integer> mImages = new ArrayList<>();
     private ArrayList<String> mNames = new ArrayList<>();
     RecyclerView recyclerView;
@@ -47,11 +48,23 @@ public class Shops extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shops);
-     firebaseFirestore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        if(mAuth.getCurrentUser()==null)
+        {
+            Intent intent = new Intent(Shops.this, UserLogin.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+            return;
+
+        }
+        mAuth = FirebaseAuth.getInstance();
+        userID = mAuth.getCurrentUser().getUid();
+        firebaseFirestore = FirebaseFirestore.getInstance();
         sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
 
         collectionReference = firebaseFirestore.collection("stores");
-
+        setSharedPreferences();
      recyclerView = findViewById(R.id.recyclerview1);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -81,7 +94,14 @@ public class Shops extends MainActivity {
 //        recyclerView.setAdapter(adapter);
 //
 //    }
-
+public void setSharedPreferences(){
+    sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+    SharedPreferences.Editor editor = sharedPreferences.edit();
+    editor.putString("userid", userID);
+    editor.putString("username", username);
+    editor.putString("phone", phone);
+    editor.commit();
+}
     private void getproducts() {
 
         Query query = collectionReference.orderBy("storename", Query.Direction.ASCENDING);

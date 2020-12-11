@@ -23,7 +23,6 @@ public class ShopFilter extends AppCompatActivity {
     String category;
     public static FirebaseFirestore firebaseFirestore;
     public static CollectionReference collectionReference;
-    static   int flag = 0;
     private ArrayList<String> mNames = new ArrayList<>();
     RecyclerView recyclerView;
     @Override

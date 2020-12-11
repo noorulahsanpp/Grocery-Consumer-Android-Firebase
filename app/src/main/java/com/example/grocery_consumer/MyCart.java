@@ -49,20 +49,17 @@ public class MyCart extends AppCompatActivity {
     private RecyclerView recyclerView;
     RelativeLayout itemlayout;
     private String shname,description;
-    private String pdtname;
     private Button placeorder;
-   static String storeid ="";
+   static String storeid ="",userId,username,phone;
      String image;
    static ArrayList<String> images = new ArrayList<>();
     static ArrayList<String> prices = new ArrayList<>();
    public static ArrayList<String> name = new ArrayList<>();
   public static  ArrayList<String> itemno = new ArrayList<>();
    static FirebaseFirestore firebaseFirestore;
-
     private ImageView shopimage;
     public static TextView shopname,details,cartvalue,total,method,discount,cartempty;
    static Date date = setDate();
-    private CartAdapter adapter;
 
 
     @Override
@@ -71,10 +68,10 @@ public class MyCart extends AppCompatActivity {
         setContentView(R.layout.activity_my_cart);
         getSupportActionBar().hide();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        getSharedPreference();
         recyclerView = findViewById(R.id.cartview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setHasFixedSize(true);
-        Intent intent = getIntent();
       initwidgets();
         cartempty.setVisibility(View.INVISIBLE);
        itemlayout.setVisibility(View.INVISIBLE);
@@ -85,21 +82,44 @@ public class MyCart extends AppCompatActivity {
         placeorder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                collectionReference = firebaseFirestore.collection("customers").document("sBNr4AvrnanDsTAcexKQ").collection("oldcart");
-                Map<String, Object> products = new HashMap<>();
-                products.put("name", name);
-                products.put("itemno", itemno);
-                products.put("date", date);
-                products.put("image", images);
-                products.put("price", prices);
-                products.put("status", "order placed");
-                collectionReference.document().set(products);
-                                    Toast.makeText(getApplicationContext(), "Your Order is placed.", Toast.LENGTH_LONG).show();
-                                    setPlaceorder();
+                setOldcart();
+                collectionReference = firebaseFirestore.collection("customers").document(userId).collection("cart");
+                collectionReference.document("cart")
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+                Toast.makeText(getApplicationContext(), "Your Order is placed.", Toast.LENGTH_LONG).show();
+                ProductAdapter.num.clear();
+                ProductAdapter.name.clear();
+                ProductAdapter.prices.clear();
+                ProductAdapter.images.clear();
+                setPlaceorder();
                 finish();
                     }
 
         });
+
+    }
+    public void setOldcart(){
+        collectionReference = firebaseFirestore.collection("customers").document(userId).collection("oldcart");
+        Map<String, Object> products = new HashMap<>();
+        products.put("name", name);
+        products.put("itemno", itemno);
+        products.put("date", date);
+        products.put("image", images);
+        products.put("price", prices);
+        products.put("status", "order placed");
+        collectionReference.document().set(products);
 
     }
     public static Date setDate(){
@@ -117,26 +137,15 @@ public class MyCart extends AppCompatActivity {
         Map<String, Object> products = new HashMap<>();
         products.put("name", name);
         products.put("itemno", itemno);
+        products.put("username", username);
+        products.put("phone", phone);
         products.put("date", date);
         products.put("image", images);
         products.put("price", prices);
         products.put("status", "order placed");
         collectionReference.document().set(products);
 
-        collectionReference.document("cart")
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
 
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
     }
 
 
@@ -157,7 +166,7 @@ public class MyCart extends AppCompatActivity {
     }
     private void getCartProducts(){
 
-               collectionReference = firebaseFirestore.collection("customers").document("sBNr4AvrnanDsTAcexKQ").collection("cart");
+               collectionReference = firebaseFirestore.collection("customers").document(userId).collection("cart");
         collectionReference.document("cart").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -192,7 +201,12 @@ public class MyCart extends AppCompatActivity {
 
            }
 
-
+    public void getSharedPreference(){
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+        userId = sharedPreferences.getString("userid", "");
+        username = sharedPreferences.getString("username", "");
+        phone = sharedPreferences.getString("phone", "");
+    }
 
 
     @Override
