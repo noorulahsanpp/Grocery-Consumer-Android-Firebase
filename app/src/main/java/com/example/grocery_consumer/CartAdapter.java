@@ -136,7 +136,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
                                       ProductAdapter.num = num;
                     ProductAdapter.name = name;
                     ProductAdapter.prices = prices;
-                    ProductAdapter.images = images;
+                    ProductAdapter.images = imageurl;
                    ProductAdapter.setProducts();
                 }
             });

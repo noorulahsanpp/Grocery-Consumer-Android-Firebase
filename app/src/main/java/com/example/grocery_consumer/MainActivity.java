@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,13 +23,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    SharedPreferences sharedPreferences;
     FirebaseFirestore firebaseFirestore;
     private FirebaseAuth mAuth;
     CollectionReference collectionReference;
     static  TextView textCartItemCount;
    static int mCartItemCount;
      ArrayList quantity = new ArrayList();
-    static String storeid;
+    static String storeid,userID,username,phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.badgelayout);
         mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        userID = mAuth.getCurrentUser().getUid();
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+
         getquantity();
     }
 
@@ -66,10 +73,14 @@ public class MainActivity extends AppCompatActivity {
         {
             logout();
         }
+
+        else if(item.getItemId() == R.id.location){
+            startActivity(new Intent(this, MapsActivity.class));
+        }
         return super.onOptionsItemSelected(item);
     }
     public void getquantity(){
-           collectionReference= firebaseFirestore.collection("customers").document("sBNr4AvrnanDsTAcexKQ").collection("cart");
+           collectionReference= firebaseFirestore.collection("customers").document(userID).collection("cart");
         collectionReference.document("cart").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -115,5 +126,13 @@ public class MainActivity extends AppCompatActivity {
         finish();
         return;
     }
+    public void setSharedPreferences(){
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("userid", userID);
+        editor.putString("username", username);
+        editor.putString("phone", phone);
+        editor.commit();
+    }
 
- }
+}

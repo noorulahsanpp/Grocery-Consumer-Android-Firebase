@@ -64,14 +64,19 @@ public class Shops extends MainActivity {
         sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
 
         collectionReference = firebaseFirestore.collection("stores");
-        setSharedPreferences();
+
      recyclerView = findViewById(R.id.recyclerview1);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         getCategory();
-
+getUserDetails();
             getproducts();
 
+    }
+
+    public void getSharedPreference(){
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+        userID = sharedPreferences.getString("userid", "");
     }
 
 //    public void setSharedPreferences(){
@@ -94,15 +99,24 @@ public class Shops extends MainActivity {
 //        recyclerView.setAdapter(adapter);
 //
 //    }
-public void setSharedPreferences(){
-    sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
-    SharedPreferences.Editor editor = sharedPreferences.edit();
-    editor.putString("userid", userID);
-    editor.putString("username", username);
-    editor.putString("phone", phone);
-    editor.commit();
-}
-    private void getproducts() {
+    public void getUserDetails(){
+        firebaseFirestore.collection("customers").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                        username = (String) document.get("username");
+                        phone = (String) document.get("phone");
+                        setSharedPreferences();
+
+
+                    }
+
+            }
+
+        });
+    }
+ private void getproducts() {
 
         Query query = collectionReference.orderBy("storename", Query.Direction.ASCENDING);
         FirestoreRecyclerOptions<Stores> options = new FirestoreRecyclerOptions.Builder<Stores>()
@@ -113,7 +127,6 @@ public void setSharedPreferences(){
         recyclerView.setAdapter(adapter);
 //             setSharedPreferences();
     }
-
     private void getCategory(){
 
             mNames.add("General Store");
