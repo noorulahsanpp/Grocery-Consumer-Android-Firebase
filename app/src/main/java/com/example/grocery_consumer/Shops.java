@@ -38,7 +38,6 @@ public class Shops extends MainActivity {
     private ShopAdapter adapter;
     public static FirebaseFirestore firebaseFirestore;
     public static CollectionReference collectionReference;
-  static   int flag = 0;
   String userID,username,phone;
     private FirebaseAuth mAuth;
     private ArrayList<Integer> mImages = new ArrayList<>();
@@ -74,17 +73,15 @@ getUserDetails();
 
     }
 
-    public void getSharedPreference(){
-        sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
-        userID = sharedPreferences.getString("userid", "");
-    }
 
-//    public void setSharedPreferences(){
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putString("storeid", storeid);
-//
-//        editor.commit();
-//    }
+    public void setSharedPreferences(){
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("userid", userID);
+        editor.putString("username", username);
+        editor.putString("phone", phone);
+        editor.commit();
+    }
 //    public void getFilter(String categoryname){
 //            FirebaseFirestore firebaseFirestore;
 //        firebaseFirestore = FirebaseFirestore.getInstance();

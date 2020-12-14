@@ -48,7 +48,7 @@ public class MyCart extends AppCompatActivity {
     private static CollectionReference collectionReference;
     private RecyclerView recyclerView;
     RelativeLayout itemlayout;
-    private String shname,description;
+    private String shname,description,orderid;
     private Button placeorder;
    static String storeid ="",userId,username,phone;
      String image;
@@ -103,7 +103,6 @@ public class MyCart extends AppCompatActivity {
                 ProductAdapter.name.clear();
                 ProductAdapter.prices.clear();
                 ProductAdapter.images.clear();
-                setPlaceorder();
                 finish();
                     }
 
@@ -115,8 +114,11 @@ public class MyCart extends AppCompatActivity {
         Map<String, Object> products = new HashMap<>();
         products.put("name", name);
         products.put("itemno", itemno);
+        products.put("orderid",orderid);
         products.put("date", date);
         products.put("image", images);
+        products.put("customer",username);
+        products.put("phone",phone);
         products.put("price", prices);
         products.put("status", "order placed");
         collectionReference.document().set(products);
@@ -132,23 +134,6 @@ public class MyCart extends AppCompatActivity {
         Date today = start.getTime();
         return today;
     }
-    public void setPlaceorder(){
-        collectionReference = firebaseFirestore.collection("stores").document(storeid).collection("order");
-        Map<String, Object> products = new HashMap<>();
-        products.put("name", name);
-        products.put("itemno", itemno);
-        products.put("username", username);
-        products.put("phone", phone);
-        products.put("date", date);
-        products.put("image", images);
-        products.put("price", prices);
-        products.put("status", "order placed");
-        collectionReference.document().set(products);
-
-
-    }
-
-
 
     private void initwidgets(){
         shopname = findViewById(R.id.shopname);
@@ -173,6 +158,7 @@ public class MyCart extends AppCompatActivity {
                 if(task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+                        orderid = document.getId();
                         name = (ArrayList<String>) document.get("name");
                         itemno = (ArrayList<String>) document.get("itemno");
                         prices = (ArrayList<String>) document.get("price");
