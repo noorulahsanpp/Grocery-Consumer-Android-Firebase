@@ -1,4 +1,6 @@
 package com.example.grocery_consumer;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -33,8 +35,9 @@ public class ProductList extends MainActivity {
     private ProductAdapter adapter;
     public static FirebaseFirestore firebaseFirestore;
     public static  CollectionReference collectionReference;
-public String storeid,userId;
+public String storeid,userId,cartstoreid;
 static Button addtocart;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +47,7 @@ static Button addtocart;
         Intent intent = getIntent();
 initwidgets();
 
-
+        ProductAdapter.imageurl.clear();
         sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
         getSharedPreference();
 
@@ -63,6 +66,8 @@ public void initwidgets(){
     public void getSharedPreference(){
         sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
         userId = sharedPreferences.getString("userid", "");
+        cartstoreid = sharedPreferences.getString("cartstoreid", "");
+
     }
 
     private void getproducts() {
@@ -71,10 +76,11 @@ public void initwidgets(){
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(query, Product.class)
                 .build();
-         adapter = new ProductAdapter(options,storeid,userId);
+         adapter = new ProductAdapter(options,cartstoreid,storeid,userId);
                recyclerView.setAdapter(adapter);
 
     }
+
 
 
 

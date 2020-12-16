@@ -1,5 +1,6 @@
 package com.example.grocery_consumer;
 
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.ArraySet;
@@ -45,21 +46,21 @@ public class MyCart extends AppCompatActivity {
     public static final String MyPREFERENCES = "MyPrefs" ;
     private static final String TAG = "MyCart";
     SharedPreferences sharedPreferences;
-    private static CollectionReference collectionReference;
+    private CollectionReference collectionReference;
     private RecyclerView recyclerView;
     RelativeLayout itemlayout;
     private String shname,description,orderid;
     private Button placeorder;
-   static String storeid ="",userId,username,phone;
-     String image;
-   static ArrayList<String> images = new ArrayList<>();
-    static ArrayList<String> prices = new ArrayList<>();
-   public static ArrayList<String> name = new ArrayList<>();
-  public static  ArrayList<String> itemno = new ArrayList<>();
-   static FirebaseFirestore firebaseFirestore;
+    static String storeid ="",userId,username,phone;
+    String image;
+     ArrayList<String> images = new ArrayList<>();
+     ArrayList<String> prices = new ArrayList<>();
+   ArrayList<String> name = new ArrayList<>();
+   ArrayList<String> itemno = new ArrayList<>();
+   FirebaseFirestore firebaseFirestore;
     private ImageView shopimage;
     public static TextView shopname,details,cartvalue,total,method,discount,cartempty;
-   static Date date = setDate();
+    static Date date = setDate();
 
 
     @Override
@@ -72,11 +73,11 @@ public class MyCart extends AppCompatActivity {
         recyclerView = findViewById(R.id.cartview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setHasFixedSize(true);
-      initwidgets();
+        initwidgets();
         cartempty.setVisibility(View.INVISIBLE);
-       itemlayout.setVisibility(View.INVISIBLE);
+        itemlayout.setVisibility(View.INVISIBLE);
         getCartProducts();
-
+        ProductAdapter.imageurl.clear();
 
 
         placeorder.setOnClickListener(new View.OnClickListener() {
@@ -160,18 +161,18 @@ public class MyCart extends AppCompatActivity {
                     if (document.exists()) {
                         orderid = document.getId();
                         name = (ArrayList<String>) document.get("name");
+                        storeid = document.get("storeid").toString();   //first time to fetch when no values in cart
                         itemno = (ArrayList<String>) document.get("itemno");
                         prices = (ArrayList<String>) document.get("price");
                         images = (ArrayList<String>) document.get("image");
-                        storeid = document.get("storeid").toString();
-                        setStorename(storeid);
                         itemlayout.setVisibility(View.VISIBLE);
                         cartempty.setVisibility(View.INVISIBLE);
+                        setStorename(storeid);
                     } else {
                         Toast.makeText(getApplicationContext(), "Cart Empty.", Toast.LENGTH_LONG).show();
                         cartempty.setVisibility(View.VISIBLE);
                     }
-                    CartAdapter adapter = new CartAdapter(itemno,name, prices, images);
+                    CartAdapter adapter = new CartAdapter(userId,storeid,itemno,name, prices, images);
                     recyclerView.setAdapter(adapter);
                 }
                 else{
@@ -190,6 +191,7 @@ public class MyCart extends AppCompatActivity {
     public void getSharedPreference(){
         sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
         userId = sharedPreferences.getString("userid", "");
+        storeid = sharedPreferences.getString("storeid","");
         username = sharedPreferences.getString("username", "");
         phone = sharedPreferences.getString("phone", "");
     }
@@ -208,13 +210,13 @@ public class MyCart extends AppCompatActivity {
     }
 
 
+
     private void setStorename(String storeid){
         firebaseFirestore.collection("stores").document(storeid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     DocumentSnapshot document =task.getResult();
-
                     shname = (String) document.get("storename");
                     description = document.get("category").toString()+("\n")+document.get("location").toString()+("\n")+document.get("phone").toString();
                     image = document.get("storeimage").toString();

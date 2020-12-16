@@ -17,8 +17,6 @@ import java.util.ArrayList;
 
 public class ShopFilter extends AppCompatActivity {
 
-    public static final String MyPREFERENCES = "MyPrefs" ;
-    SharedPreferences sharedPreferences;
     private ShopAdapter adapter;
     String category;
     public static FirebaseFirestore firebaseFirestore;
@@ -31,15 +29,11 @@ public class ShopFilter extends AppCompatActivity {
         setContentView(R.layout.activity_shop_filter);
         firebaseFirestore = FirebaseFirestore.getInstance();
         Intent intent = getIntent();
-
-
         recyclerView = findViewById(R.id.filterview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
         recyclerView.setHasFixedSize(true);
         category= intent.getExtras().get("category").toString();
-
-getproducts();
+        getproducts();
 
     }
     private void getproducts() {
@@ -51,7 +45,7 @@ getproducts();
 
         adapter = new ShopAdapter(options);
         recyclerView.setAdapter(adapter);
-//             setSharedPreferences();
+
     }
     @Override
     public void onStart() {

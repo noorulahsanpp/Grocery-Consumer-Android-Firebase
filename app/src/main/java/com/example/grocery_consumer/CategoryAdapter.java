@@ -15,8 +15,8 @@ import java.util.List;
 import static android.media.CamcorderProfile.get;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
-    ArrayList<String> arrayList = new ArrayList<>();
-    ArrayList<Integer> imagelist = new ArrayList<>();
+    ArrayList<String> arrayList;
+    ArrayList<Integer> imagelist;
 
     String cat = "";
 

@@ -23,13 +23,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    SharedPreferences sharedPreferences;
     FirebaseFirestore firebaseFirestore;
     private FirebaseAuth mAuth;
-    CollectionReference collectionReference;
     static  TextView textCartItemCount;
-   static int mCartItemCount;
-     ArrayList quantity = new ArrayList();
-    static String storeid,userID;
+    static int mCartItemCount;
+    ArrayList quantity = new ArrayList();
+    static String cartstoreid,userID;
+    CollectionReference collectionReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,16 +40,15 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         userID = mAuth.getCurrentUser().getUid();
-
         getquantity();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-         final MenuItem menuItem = menu.findItem(R.id.action_cart);
+        final MenuItem menuItem = menu.findItem(R.id.action_cart);
         View actionView = menuItem.getActionView();
-        textCartItemCount = (TextView) actionView.findViewById(R.id.cart_badge);
+        textCartItemCount =actionView.findViewById(R.id.cart_badge);
         actionView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
     public void getquantity(){
            collectionReference= firebaseFirestore.collection("customers").document(userID).collection("cart");
         collectionReference.document("cart").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -84,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
             DocumentSnapshot document = task.getResult();
             if (document.exists()) {
                 quantity =(ArrayList<String>) document.get("itemno");
-                storeid = document.get("storeid").toString();
                 }
             mCartItemCount = 0;
             for(int i = 0;i<quantity.size();i++){

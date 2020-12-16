@@ -5,15 +5,17 @@ public class Product{
     private  Double price;
     private  String name;
     private  String image;
+    private Integer quantity;
 
     public Product(){
 
     }
-    public Product( String pid, String name, Double price,String image){
+    public Product( String pid, String name, Double price,String image,Integer quantity){
         this.pid = pid;
         this.name = name;
         this.image = image;
         this.price = price;
+        this.quantity = quantity;
     }
 
     public Double getPrice() {
@@ -46,5 +48,13 @@ public class Product{
 
     public void setPid(String pid) {
         this.pid = pid;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }

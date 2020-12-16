@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -33,23 +34,24 @@ import java.util.Map;
 
 public class Shops extends MainActivity {
 
-    public static final String MyPREFERENCES = "MyPrefs" ;
+    public static final String MyPREFERENCES = "MyPrefs";
     SharedPreferences sharedPreferences;
     private ShopAdapter adapter;
     public static FirebaseFirestore firebaseFirestore;
     public static CollectionReference collectionReference;
-  String userID,username,phone;
+    public static DocumentReference documentReference;
+    String userID, username, phone;
     private FirebaseAuth mAuth;
     private ArrayList<Integer> mImages = new ArrayList<>();
     private ArrayList<String> mNames = new ArrayList<>();
     RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shops);
         mAuth = FirebaseAuth.getInstance();
-        if(mAuth.getCurrentUser()==null)
-        {
+        if (mAuth.getCurrentUser() == null) {
             Intent intent = new Intent(Shops.this, UserLogin.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -64,54 +66,52 @@ public class Shops extends MainActivity {
 
         collectionReference = firebaseFirestore.collection("stores");
 
-     recyclerView = findViewById(R.id.recyclerview1);
+        recyclerView = findViewById(R.id.recyclerview1);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         getCategory();
-getUserDetails();
-            getproducts();
+        getUserDetails();
+        getproducts();
 
     }
 
-
-    public void setSharedPreferences(){
+    public void setSharedPreferences() {
         sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("userid", userID);
+       editor.putString("cartstoreid", cartstoreid);
         editor.putString("username", username);
         editor.putString("phone", phone);
         editor.commit();
     }
-//    public void getFilter(String categoryname){
-//            FirebaseFirestore firebaseFirestore;
-//        firebaseFirestore = FirebaseFirestore.getInstance();
-//        CollectionReference collectionReference;
-//        collectionReference = firebaseFirestore.collection("stores");
-//        Query query = collectionReference.whereEqualTo("category",categoryname+"");
-//        FirestoreRecyclerOptions<Stores> options = new FirestoreRecyclerOptions.Builder<Stores>()
-//                .setQuery(query, Stores.class)
-//                .build();
-//
-//        adapter = new ShopAdapter(options);
-//        recyclerView.setAdapter(adapter);
-//
-//    }
-    public void getUserDetails(){
-        firebaseFirestore.collection("customers").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+    public void getUserDetails() {
+        documentReference = firebaseFirestore.collection("customers").document(userID);
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()) {
+                if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                        username = (String) document.get("username");
-                        phone = (String) document.get("phone");
-                        setSharedPreferences();
-
-
-                    }
+                    username = (String) document.get("username");
+                    phone = (String) document.get("phone");
+                    setSharedPreferences();
+                }
 
             }
-
         });
+        documentReference.collection("cart").document("cart").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        cartstoreid = (String) document.get("storeid");
+                        setSharedPreferences();
+                    }
+                }
+            }
+        });
+
     }
  private void getproducts() {
 
@@ -122,7 +122,6 @@ getUserDetails();
 
        adapter = new ShopAdapter(options);
         recyclerView.setAdapter(adapter);
-//             setSharedPreferences();
     }
     private void getCategory(){
 

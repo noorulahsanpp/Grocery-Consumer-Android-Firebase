@@ -14,27 +14,43 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
 
 
-    ArrayList<String> prices = new ArrayList<>();
-    ArrayList<String> images = new ArrayList<>();
-    ArrayList<String> imageurl = new ArrayList<>();
+    static ArrayList<String> cName = new ArrayList<>();
+    static  ArrayList<String> cNum = new ArrayList<>();
+    static ArrayList<String> cImages = new ArrayList<>();
+    static ArrayList<String> cImageurl = new ArrayList<>();
+    static ArrayList<String> cPrices = new ArrayList<>();
+    static  String storeid,userid,cartstoreid = "",cartid="";
+
+
+//    static Date date = setDate();
     float cartvalue = 0,total = 0,discount = 0;
-    ArrayList<String> num = new ArrayList<>();
-    ArrayList<String> name = new ArrayList<>();
-    public CartAdapter(ArrayList<String> itemno1, ArrayList<String> name1, ArrayList<String> prices1, ArrayList<String> images1) {
-        name = name1;
-        prices = prices1;
-        num = itemno1;
-        images = images1;
+
+    public CartAdapter( String userId, String id,ArrayList<String> itemno1, ArrayList<String> name1, ArrayList<String> prices1, ArrayList<String> images1) {
+        userid = userId;
+        storeid=id;
+        cName = name1;
+        cPrices = prices1;
+        cNum = itemno1;
+        cImages = images1;
     }
 
     @NonNull
@@ -44,18 +60,24 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
                 .inflate(R.layout.cart_items, parent, false);
         return new CartHolder(view);
     }
+public static void updateProducts(){
+    FirebaseFirestore firebaseFirestore;
+    firebaseFirestore = FirebaseFirestore.getInstance();
 
+    firebaseFirestore.collection("customers").document(userid+"").collection("cart").document("cart").update(
+            "itemno", cNum , "name",cName,"price",cPrices,"image",cImages);
+}
     @Override
     public void onBindViewHolder(@NonNull CartHolder holder, int position) {
-        holder.topic.setText(name.get(position));
-        holder.price.setText(prices.get(position));
-        String amount = prices.get(position);
-        String imageUrl = images.get(position);
-        imageurl.add(imageUrl);
+        holder.topic.setText(cName.get(position));
+        holder.price.setText(cPrices.get(position));
+        String amount =cPrices.get(position);
+        String imageUrl = cImages.get(position);
+        cImageurl.add(imageUrl);
         Picasso.get().load(imageUrl).into(holder.image);
-        holder.topic.setText(name.get(position));
-        String itemnum = num.get(position);
-              holder.edit.setNumber(itemnum);
+        holder.topic.setText(cName.get(position));
+        String itemnum = cNum.get(position);
+         holder.edit.setNumber(itemnum);
         float pdtprice = ( Float.parseFloat(amount)* Integer.parseInt(itemnum));
         cartvalue = cartvalue +pdtprice;
                       MyCart.cartvalue.setText("₹ "+cartvalue);
@@ -65,7 +87,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
 
     @Override
     public int getItemCount() {
-        return name.size();
+        return cName.size();
     }
 
 
@@ -89,65 +111,78 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
                 @Override
                 public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
                     p = (String) price.getText();
-                    i = imageurl.get(getAdapterPosition());
+                    i = cImageurl.get(getAdapterPosition());
                     value = String.valueOf(newValue);
                     n = (String) topic.getText();
-                    if (name.size() == 0) {
-                        name.add(n);
-                        num.add(value);
-                        prices.add(p);
-                        images.add(i);
+                    if (cName.size() == 0) {
+                        cName.add(n);
+                        cNum.add(value);
+                        cPrices.add(p);
+                        cImages.add(i);
                     } else {
-                        for (int i = 0; i < name.size(); i++) {
+                        for (int i = 0; i < cName.size(); i++) {
                             flag = 0;
-                            if (n.equals(name.get(i))) {
-                                num.set(i, value);
+                            if (n.equals(cName.get(i))) {
+                                cNum.set(i, value);
                                 flag = 1;
                                 break;
                             }
                         }
                         if (flag != 1) {
-                            name.add(n);
-                            num.add(value);
-                            prices.add(p);
-                            images.add(i);
+                            cName.add(n);
+                            cNum.add(value);
+                            cPrices.add(p);
+                            cImages.add(i);
                         }
                     }
                     if (newValue == 0) {
-                        for (int i = 0; i < num.size(); i++) {
+                        for (int i = 0; i < cNum.size(); i++) {
                             String n1 = "0";
-                            if (n1.equals(num.get(i))) {
+                            if (n1.equals(cNum.get(i))) {
 
-                                num.remove(i);
-                                name.remove(i);
-                                prices.remove(i);
-                                images.remove(i);
+                                cNum.remove(i);
+                                cName.remove(i);
+                                cPrices.remove(i);
+                                cImages.remove(i);
                                 removeAt(i);
                                 break;
 
                             }
                         }
                     }
+                    ProductAdapter.name = cName;
+                    ProductAdapter.num = cNum;
+                    ProductAdapter.images = cImages;
+                    ProductAdapter.prices = cPrices;
+                    if(cName.size()==0){
+                        ProductAdapter.deletecart();
+                    }
+                    else {
+                        updateProducts();
+                    }
                     cartvalue=0;
-                    for(int i=0;i<num.size();i++)
-
-                    cartvalue = cartvalue +( Float.parseFloat(prices.get(i))* Integer.parseInt(num.get(i)));
+                    total=0;
+                    for(int i=0;i<cNum.size();i++) {
+                        cartvalue = cartvalue + (Float.parseFloat(cPrices.get(i)) * Integer.parseInt(cNum.get(i)));
+                        total = total + discount + (Float.parseFloat(cPrices.get(i)) * Integer.parseInt(cNum.get(i)));
+                    }
+                    MyCart.total.setText("₹ "+total);
                     MyCart.cartvalue.setText("₹ "+cartvalue);
-                                      ProductAdapter.num = num;
-                    ProductAdapter.name = name;
-                    ProductAdapter.prices = prices;
-                    ProductAdapter.images = imageurl;
-                   ProductAdapter.setProducts();
+
+
+
+
                 }
             });
 
         }
 
     }
+
     public void removeAt(int position) {
           notifyItemRemoved(position);
 
-
     }
+
 }
 
