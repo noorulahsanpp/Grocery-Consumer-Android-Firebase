@@ -15,13 +15,18 @@
         app:actionLayout="@layout/badgelayout"
         android:iconTint="@color/appcolor"
         android:title="@string/cart" />
-
+    <item
+        android:id="@+id/previous"
+        android:orderInCategory="600"
+        android:title="Previous orders"
+        app:showAsAction="never"/>
     <item
         android:id="@+id/logout"
         android:orderInCategory="600"
         android:icon="@drawable/logout"
         android:title="Logout"
         app:showAsAction="never"/>
+
 
 
 </menu>

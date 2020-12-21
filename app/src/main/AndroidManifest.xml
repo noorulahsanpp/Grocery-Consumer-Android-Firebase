@@ -23,7 +23,7 @@
         <activity android:name=".OTP"></activity>
         <activity android:name=".PreviousOrders" />
         <activity android:name=".ShopFilter" />
-        <activity android:name=".Shops">
+        <activity android:name=".ShopList">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,7 +49,7 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".ActionBarActivity" />
     </application>
 
 </manifest>

@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -13,16 +12,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.util.ArrayList;
-
 public class ShopFilter extends AppCompatActivity {
 
     private ShopAdapter adapter;
-    String category;
     public static FirebaseFirestore firebaseFirestore;
     public static CollectionReference collectionReference;
-    private ArrayList<String> mNames = new ArrayList<>();
     RecyclerView recyclerView;
+    String category;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +35,8 @@ public class ShopFilter extends AppCompatActivity {
     private void getproducts() {
         collectionReference = firebaseFirestore.collection("stores");
         Query query = collectionReference.whereEqualTo("category",category);
-        FirestoreRecyclerOptions<Stores> options = new FirestoreRecyclerOptions.Builder<Stores>()
-                .setQuery(query, Stores.class)
+        FirestoreRecyclerOptions<Shops> options = new FirestoreRecyclerOptions.Builder<Shops>()
+                .setQuery(query, Shops.class)
                 .build();
 
         adapter = new ShopAdapter(options);

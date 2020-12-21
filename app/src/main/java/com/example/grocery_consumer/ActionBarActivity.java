@@ -22,16 +22,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
-    public static final String MyPREFERENCES = "MyPrefs" ;
-    SharedPreferences sharedPreferences;
-    FirebaseFirestore firebaseFirestore;
+public class ActionBarActivity extends AppCompatActivity {
+
+    static FirebaseFirestore firebaseFirestore;
     private FirebaseAuth mAuth;
     static  TextView textCartItemCount;
     static int mCartItemCount;
-    ArrayList quantity = new ArrayList();
+    static ArrayList quantity = new ArrayList();
     static String cartstoreid,userID;
-    CollectionReference collectionReference;
+    static CollectionReference collectionReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         userID = mAuth.getCurrentUser().getUid();
-        getquantity();
+
     }
 
     @Override
@@ -55,9 +54,9 @@ public class MainActivity extends AppCompatActivity {
                 onOptionsItemSelected(menuItem);
             }
         });
-
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -70,15 +69,22 @@ public class MainActivity extends AppCompatActivity {
         {
             logout();
         }
-
         else if(item.getItemId() == R.id.location){
             startActivity(new Intent(this, MapsActivity.class));
+        }
+        else if(item.getItemId() == R.id.previous){
+            startActivity(new Intent(this, PreviousOrders.class));
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getquantity();
+    }
 
-    public void getquantity(){
+    public static void getquantity(){
            collectionReference= firebaseFirestore.collection("customers").document(userID).collection("cart");
         collectionReference.document("cart").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -93,14 +99,12 @@ public class MainActivity extends AppCompatActivity {
                 String n = (String) quantity.get(i);
                 mCartItemCount = mCartItemCount + Integer.parseInt(n);
             }
-
             setupBadge();
             }
-
                     }
         });
-
     }
+
     public static void setupBadge() {
 
         if (textCartItemCount != null) {
@@ -116,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     private void logout(){
         mAuth.signOut();
         Intent intent = new Intent(getApplicationContext(), UserLogin.class);

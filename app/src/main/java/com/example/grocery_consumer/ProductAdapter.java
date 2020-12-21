@@ -34,13 +34,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAdapter.ProductHolder> {
+
    static   FirebaseFirestore firebaseFirestore;
    static CollectionReference collectionReference ;
-    static ArrayList<String> name = new ArrayList<>();
-    static  ArrayList<String> num = new ArrayList<>();
-    static ArrayList<String> images = new ArrayList<>();
-     static ArrayList<String> imageurl = new ArrayList<>();
-    static ArrayList<String> prices = new ArrayList<>();
+    static ArrayList<String> prdtname = new ArrayList<>();
+    static  ArrayList<String> prdtnum = new ArrayList<>();
+    static ArrayList<String> prdtimages = new ArrayList<>();
+     static ArrayList<String> prdtimageurl = new ArrayList<>();
+    static ArrayList<String> prdtprices = new ArrayList<>();
     static  String storeid,userId,cartstoreid = "",cartid="";
     Integer quantity;
     static  Integer flag1 =0;
@@ -54,133 +55,62 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
         firebaseFirestore = FirebaseFirestore.getInstance();
         collectionReference = firebaseFirestore.collection("customers").document(userId).collection("cart");
         if(!cartstoreid.equals(storeid)){
-            name.clear();
-            num.clear();                        //clears array if store not present in cart
-            images.clear();
-            prices.clear();
-            imageurl.clear();
+            prdtname.clear();
+            prdtnum.clear();                        //clears array if store not present in cart
+            prdtimages.clear();
+            prdtprices.clear();
+            prdtimageurl.clear();
+            cartid=cartstoreid;
                }
-        getCartProducts();      //to call the cart products if present
-    }
-
-        public static void setProducts() {
-        FirebaseFirestore firebaseFirestore;
-        firebaseFirestore = FirebaseFirestore.getInstance();
-
-        final CollectionReference collectionReference ;
-        collectionReference = firebaseFirestore.collection("customers").document(userId).collection("cart");
-        if(!name.isEmpty()){
-
-            collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        Map<String, Object> products = new HashMap<>();
-                        products.put("name", name);
-                        products.put("itemno", num);
-                        products.put("image", images);
-                        products.put("price", prices);
-                        products.put("date", date);
-                        products.put("storeid",storeid);
-                        products.put("status", "added to cart");
-                        collectionReference.document("cart").set(products);
-                    }
-                    getCartProducts();
-                }
-
-            });
-
+        else
+        {
+            getCartProducts();      //to call the cart products if present
         }
-        else {
+        try {
+            //set time in mili
+            Thread.sleep(250);
 
-            deletecart();
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
-
-public static void deletecart(){
-
-    collectionReference.document("cart")
-            .delete()
-            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    cartid="";
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-
-                }
-            });
-}
-
-    public static Date setDate(){
-        Calendar start = Calendar.getInstance();
-        start.setTime(new Date());
-        start.set(Calendar.HOUR_OF_DAY, 0);
-        start.set(Calendar.MINUTE, 0);
-        start.set(Calendar.SECOND, 0);
-        start.set(Calendar.MILLISECOND, 0);
-        Date today = start.getTime();
-        return today;
-    }
-    public static void getCartProducts(){
-               collectionReference.whereEqualTo("storeid",storeid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        name = (ArrayList<String>) document.get("name");
-                        num = (ArrayList<String>) document.get("itemno");
-                        prices = (ArrayList<String>) document.get("price");
-                        images = (ArrayList<String>) document.get("image");
-                        cartid = document.get("storeid").toString();
-                    }
-                }
-
-            }
-
-
-        });
-
-    }
     @Override
     protected void onBindViewHolder(@NonNull ProductHolder holder, final int position, @NonNull final Product products) {
-        holder.price.setText(products.getPrice().toString());
+
+        holder.priceTv.setText(products.getPrice().toString());
         quantity = products.getQuantity();
-        holder.topic.setText(products.getName());
+        holder.topicTv.setText(products.getName());
         String topic = products.getName();
         String imageUrl = products.getImage();
-        imageurl.add(imageUrl);
-        Picasso.get().load(imageUrl).into(holder.image);
-        holder.edit.setRange(0,quantity);
-        if (num.size()!= 0) {
-            for (int i = 0; i < num.size(); i++) {
-                if (topic.equals(name.get(i))) {
-                    String itemnumber = num.get(i);
-                    holder.edit.setNumber(itemnumber);
+        prdtimageurl.add(imageUrl);
+        Picasso.get().load(imageUrl).into(holder.imageIv);
+        holder.editBtn.setRange(0,quantity);
+        if (prdtnum.size()!= 0) {
+            for (int i = 0; i < prdtnum.size(); i++) {
+                if (topic.equals(prdtname.get(i))) {
+                    String itemnumber = prdtnum.get(i);
+                    holder.editBtn.setNumber(itemnumber);
                     break;
                 }
                 else{
-                   holder.edit.setNumber("0");
+                   holder.editBtn.setNumber("0");
                 }
             }
-                    if(holder.edit.getNumber().equals("0")) {
-                        holder.add.setEnabled(true);
-                        holder.edit.setEnabled(false);
+                    if(holder.editBtn.getNumber().equals("0")) {
+                        holder.addBtn.setEnabled(true);
+                        holder.editBtn.setEnabled(false);
                     }
                     else{
-                        holder.add.setEnabled(false);
-                        holder.edit.setEnabled(true);
+                        holder.addBtn.setEnabled(false);
+                        holder.editBtn.setEnabled(true);
                     }
             }
 
         else{
-            holder.edit.setNumber("0");
-            holder.edit.setEnabled(false);
-            holder.add.setEnabled(true);
+            holder.editBtn.setNumber("0");
+            holder.editBtn.setEnabled(false);
+            holder.addBtn.setEnabled(true);
 
         }
     }
@@ -196,27 +126,27 @@ public static void deletecart(){
 
 
     class ProductHolder extends RecyclerView.ViewHolder {
-        TextView topic;
-        TextView price;
-        ImageView image;
-        Button add;
+        TextView topicTv;
+        TextView priceTv;
+        ImageView imageIv;
+        Button addBtn;
         String value;
-        ElegantNumberButton edit;
+        ElegantNumberButton editBtn;
         String n, i, p;
         int flag = 0;
 
         public ProductHolder(View itemView) {
             super(itemView);
 
-            topic = itemView.findViewById(R.id.itemname);
-            price = itemView.findViewById(R.id.itemprice);
-            image = itemView.findViewById(R.id.itemimage);
-            add = itemView.findViewById(R.id.itemadd);
-            edit = itemView.findViewById(R.id.editbutton);
+            topicTv = itemView.findViewById(R.id.itemname);
+            priceTv = itemView.findViewById(R.id.itemprice);
+            imageIv = itemView.findViewById(R.id.itemimage);
+            addBtn = itemView.findViewById(R.id.itemadd);
+            editBtn= itemView.findViewById(R.id.editbutton);
 
 
 
-            add.setOnClickListener(new View.OnClickListener() {
+            addBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if(!cartid.equals("")){// value in cart
@@ -235,47 +165,47 @@ public static void deletecart(){
                 }
             });
 
-            edit.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
+            editBtn.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
                 @Override
                 public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
 
                     value = String.valueOf(newValue);
-                    p = (String) price.getText();
-                    i = imageurl.get(getAdapterPosition());
-                    n = (String) topic.getText();
-                    if (name.size() == 0) {
-                        name.add(n);
-                        num.add(value);
-                        prices.add(p);
-                        images.add(i);
+                    p = (String) priceTv.getText();
+                    i = prdtimageurl.get(getAdapterPosition());
+                    n = (String) topicTv.getText();
+                    if (prdtname.size() == 0) {
+                        prdtname.add(n);
+                        prdtnum.add(value);
+                        prdtprices.add(p);
+                        prdtimages.add(i);
                     } else {
-                        for (int i = 0; i < name.size(); i++) {
+                        for (int i = 0; i < prdtname.size(); i++) {
                             flag = 0;
-                            if (n.equals(name.get(i))) {
-                                num.set(i, value);
+                            if (n.equals(prdtname.get(i))) {
+                                prdtnum.set(i, value);
                                 flag = 1;
                                 break;
                             }
                         }
                         if (flag != 1) {
-                            name.add(n);
-                            num.add(value);
-                            prices.add(p);
-                            images.add(i);
+                            prdtname.add(n);
+                            prdtnum.add(value);
+                            prdtprices.add(p);
+                            prdtimages.add(i);
                         }
 
                     }
 
                     if (newValue == 0) {
-                        add.setEnabled(true);
-                        edit.setEnabled(false);
-                        for (int i = 0; i < num.size(); i++) {
+                        addBtn.setEnabled(true);
+                        editBtn.setEnabled(false);
+                        for (int i = 0; i < prdtnum.size(); i++) {
                             String n1 = "0";
-                            if (n1.equals(num.get(i))) {
-                                num.remove(i);
-                                name.remove(i);
-                                prices.remove(i);
-                                images.remove(i);
+                            if (n1.equals(prdtnum.get(i))) {
+                                prdtnum.remove(i);
+                                prdtname.remove(i);
+                                prdtprices.remove(i);
+                                prdtimages.remove(i);
                                 break;
                             }
                         }
@@ -286,15 +216,14 @@ public static void deletecart(){
 
             });
 
-            ProductList.addtocart.setOnClickListener(new View.OnClickListener() {
+            ProductList.addtocartBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     setProducts();
-                    if (name.isEmpty()) {
+                    if (prdtname.isEmpty()) {
                         Toast.makeText(view.getContext(), "Please add items", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(view.getContext(), "Items added to cart", Toast.LENGTH_SHORT).show();
-
                     }
                 }
 
@@ -302,17 +231,17 @@ public static void deletecart(){
 
         }
         public void setnewitems(){
-            add.setEnabled(false);
-            edit.setEnabled(true);
-            edit.setNumber("1");
-            value = edit.getNumber();
-            n = (String) topic.getText();
-            p = (String) price.getText();
-            i = imageurl.get(getAdapterPosition());
-            name.add(n);
-            num.add(value);
-            prices.add(p);
-            images.add(i);
+            addBtn.setEnabled(false);
+            editBtn.setEnabled(true);
+            editBtn.setNumber("1");
+            value = editBtn.getNumber();
+            n = (String) topicTv.getText();
+            p = (String) priceTv.getText();
+            i = prdtimageurl.get(getAdapterPosition());
+            prdtname.add(n);
+            prdtnum.add(value);
+            prdtprices.add(p);
+            prdtimages.add(i);
         }
         public void AskOption() {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(itemView.getContext());
@@ -339,6 +268,89 @@ public static void deletecart(){
 
     }
 
+    public static void setProducts() {
+        FirebaseFirestore firebaseFirestore;
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        final CollectionReference collectionReference ;
+        collectionReference = firebaseFirestore.collection("customers").document(userId).collection("cart");
+        if(!prdtname.isEmpty()){
+
+            collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        Map<String, Object> products = new HashMap<>();
+                        products.put("name", prdtname);
+                        products.put("itemno", prdtnum);
+                        products.put("image", prdtimages);
+                        products.put("price", prdtprices);
+                        products.put("date", date);
+                        products.put("storeid",storeid);
+                        products.put("status", "added to cart");
+                        collectionReference.document("cart").set(products);
+                    }
+                    ActionBarActivity.getquantity();
+                    getCartProducts();
+                }
+
+            });
+
+        }
+        else {
+            deletecart();
+        }
+    }
+
+
+    public static void deletecart(){
+
+        collectionReference.document("cart")
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        cartid="";
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+    }
+
+    public static Date setDate(){
+        Calendar start = Calendar.getInstance();
+        start.setTime(new Date());
+        start.set(Calendar.HOUR_OF_DAY, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+        start.set(Calendar.MILLISECOND, 0);
+        Date today = start.getTime();
+        return today;
+    }
+    public static void getCartProducts(){
+        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        prdtname = (ArrayList<String>) document.get("name");
+                        prdtnum = (ArrayList<String>) document.get("itemno");
+                        prdtprices = (ArrayList<String>) document.get("price");
+                        prdtimages = (ArrayList<String>) document.get("image");
+                        cartid = document.get("storeid").toString();
+                    }
+                }
+
+            }
+
+
+        });
+
+    }
 
     }
 

@@ -18,70 +18,63 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.squareup.picasso.Picasso;
 
-public class ShopAdapter extends FirestoreRecyclerAdapter<Stores, ShopAdapter.ShopHolder>{
+public class ShopAdapter extends FirestoreRecyclerAdapter<Shops, ShopAdapter.ShopHolder>{
 
+    static List<String> shopid= new ArrayList<>();
+    public static ArrayList<String> name = new ArrayList<>();
 
-    List<String> id= new ArrayList<>();
-       public static ArrayList<String> name = new ArrayList<>();
-
-        public ShopAdapter(@NonNull FirestoreRecyclerOptions<Stores> options) {
-            super(options);
-
-        }
-
+    public ShopAdapter(@NonNull FirestoreRecyclerOptions<Shops> options) {
+        super(options);
+    }
 
     @Override
-    protected void onBindViewHolder(@NonNull ShopHolder holder,final int position, @NonNull final Stores shop) {
-        String uid = shop.getUserid();
-        id.add(uid);
-        holder.shname.setText(shop.getStorename());
-        holder.shcategory.setText(shop.getCategory());
-        holder.shplace.setText(shop.getlocation());
+    protected void onBindViewHolder(@NonNull ShopHolder holder,final int position, @NonNull final Shops shop) {
+        String sid = shop.getUserid();
+        shopid.add(sid);
+        holder.shnameTv.setText(shop.getStorename());
+        holder.shcategoryTv.setText(shop.getCategory());
+        holder.shplaceTv.setText(shop.getlocation());
         String imageUrl =shop.getStoreimage();
-        Picasso.get().load(imageUrl).into(holder.shimage);
+        Picasso.get().load(imageUrl).into(holder.shimageIv);
+    }
+
+    @NonNull
+    @Override
+    public ShopHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.shops_recyclerview, parent, false);
+
+        return new ShopHolder(view);
     }
 
 
+    class ShopHolder extends RecyclerView.ViewHolder {
+        TextView shnameTv;
+        TextView shplaceTv;
+        ImageView shimageIv;
+        TextView shcategoryTv;
 
-        @NonNull
-        @Override
-        public ShopHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.shops_recyclerview, parent, false);
 
-            return new ShopHolder(view);
+        public ShopHolder(View itemView) {
+            super(itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(final View view) {
+                    Intent i = new Intent(view.getContext(), ProductList.class);
+                    i.putExtra("storeid", shopid.get(getAdapterPosition()));
+                    view.getContext().startActivity(i);
+                }
+            });
+
+
+            shnameTv = itemView.findViewById(R.id.shopsname);
+            shplaceTv = itemView.findViewById(R.id.shopplace);
+            shimageIv = itemView.findViewById(R.id.shopimage);
+            shcategoryTv = itemView.findViewById(R.id.shopcategory);
+
         }
-
-
-class ShopHolder extends RecyclerView.ViewHolder {
-    TextView shname;
-    TextView shplace;
-    ImageView shimage;
-    TextView shcategory;
-
-
-    public ShopHolder(View itemView) {
-        super(itemView);
-
-        itemView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(final View view) {
-              //  getCartProducts();
-                Intent i = new Intent(view.getContext(), ProductList.class);
-                i.putExtra("storeid", id.get(getAdapterPosition()));
-
-                view.getContext().startActivity(i);
-            }
-        });
-
-
-        shname = itemView.findViewById(R.id.shopsname);
-        shplace = itemView.findViewById(R.id.shopplace);
-        shimage = itemView.findViewById(R.id.shopimage);
-        shcategory = itemView.findViewById(R.id.shopcategory);
-
     }
-}
 }
 
