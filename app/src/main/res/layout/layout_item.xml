@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -11,32 +12,79 @@
         app:cardBackgroundColor="#f3f3f3"
         app:cardElevation="8dp"
         android:layout_margin="12dp">
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            android:orientation="vertical">
+            android:layout_margin="12dp">
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5sp"
+                android:textSize="12sp"
+                android:text="Shop Name :"/>
             <TextView
                 android:id="@+id/tv_item_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="12sp"
-                android:textSize="18sp"
-                android:text="Item Title"/>
+                android:layout_marginLeft="100dp"
+                android:padding="5sp"
+                android:textSize="12sp"
+                android:text=""/>
             <TextView
-                android:id="@+id/tv_item_phone"
-                android:layout_width="match_parent"
+                android:id="@+id/shpdescription"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="12sp"
-                android:textSize="18sp"
-                android:text="Item Phone"/>
+                android:layout_marginTop="15dp"
+                android:padding="5sp"
+                android:textSize="12sp"
+                android:text="Shop Details : "/>
 
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:layout_marginTop="15dp"
+                android:padding="5sp"
+                android:textSize="12sp"
+                android:text=""/>
+            <TextView
+                android:id="@+id/totalamnt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:layout_below="@+id/description"
+                android:textSize="12sp"
+                android:text="Total Amount : "/>
+
+
+            <TextView
+                android:id="@+id/total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:paddingLeft="5dp"
+                android:layout_below="@id/description"
+                android:textSize="12sp"
+                android:text=""/>
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="250dp"
+                android:padding="5sp"
+                android:textSize="12sp"
+                android:text=""/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_sub_item"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/total"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-        </LinearLayout>
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
-</LinearLayout>
+</RelativeLayout>
