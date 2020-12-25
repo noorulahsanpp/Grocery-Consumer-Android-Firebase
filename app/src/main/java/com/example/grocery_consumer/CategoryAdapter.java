@@ -15,15 +15,14 @@ import java.util.List;
 import static android.media.CamcorderProfile.get;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
+
     ArrayList<String> arrayList;
     ArrayList<Integer> imagelist;
-
     String cat = "";
 
-    public CategoryAdapter(ArrayList<String> mNames, ArrayList<Integer> mImages) {
-
-        arrayList = mNames;
-        imagelist = mImages;
+    public CategoryAdapter(ArrayList<String> cNames, ArrayList<Integer> cImages) {
+        arrayList = cNames;
+        imagelist = cImages;
     }
 
 
@@ -36,8 +35,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
-        holder.Name.setText(arrayList.get(position));
-        holder.icons.setImageResource(imagelist.get(position));
+        holder.NameTv.setText(arrayList.get(position));
+        holder.iconsIv.setImageResource(imagelist.get(position));
 
     }
 
@@ -50,12 +49,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
 
 
-        TextView Name;
-        ImageView icons;
+        TextView NameTv;
+        ImageView iconsIv;
 
 
         public ViewHolder(View itemView) {
             super(itemView);
+            NameTv = itemView.findViewById(R.id.category);
+            iconsIv = itemView.findViewById(R.id.icons);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -63,14 +64,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                     cat = arrayList.get(getAdapterPosition());
                     Intent i = new Intent(view.getContext(), ShopFilter.class);
                     i.putExtra("category", cat);
-
                     view.getContext().startActivity(i);
 
                 }
             });
 
-            Name = itemView.findViewById(R.id.category);
-            icons = itemView.findViewById(R.id.icons);
+
         }
     }
 

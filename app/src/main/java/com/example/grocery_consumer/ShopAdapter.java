@@ -41,14 +41,12 @@ public class ShopAdapter extends FirestoreRecyclerAdapter<Shops, ShopAdapter.Sho
     @NonNull
     @Override
     public ShopHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.shops_recyclerview, parent, false);
-
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.shops_recyclerview, parent, false);
         return new ShopHolder(view);
     }
 
-
     class ShopHolder extends RecyclerView.ViewHolder {
+
         TextView shnameTv;
         TextView shplaceTv;
         ImageView shimageIv;

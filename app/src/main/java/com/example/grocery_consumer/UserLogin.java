@@ -12,7 +12,6 @@ import android.widget.TextView;
 public class UserLogin extends AppCompatActivity {
     private static final String TAG = "Login";
     public static final String MyPREFERENCES = "MyPrefs" ;
-    private TextView signUpTv;
     private EditText phoneET;
     private Button registerBT;
     private String uPhone;
@@ -22,15 +21,9 @@ public class UserLogin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_user_login);
-        signUpTv = findViewById(R.id.signupTv);
         phoneET = findViewById(R.id.phone);
         registerBT = findViewById(R.id.button8);
-        signUpTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), UserRegistration.class));
-            }
-        });
+
         registerBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

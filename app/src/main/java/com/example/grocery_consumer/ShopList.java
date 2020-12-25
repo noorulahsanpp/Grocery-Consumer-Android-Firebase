@@ -27,17 +27,17 @@ public class ShopList extends ActionBarActivity {
     private ShopAdapter adapter;
     public static FirebaseFirestore firebaseFirestore;
     public static CollectionReference collectionReference;
-    public static DocumentReference documentReference;
     private FirebaseAuth mAuth;
     private ArrayList<Integer> cImages = new ArrayList<>();
     private ArrayList<String> cNames = new ArrayList<>();
     RecyclerView recyclerView;
-    String userID, username, phone;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shops);
+
         mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() == null) {
             Intent intent = new Intent(ShopList.this, UserLogin.class);
@@ -46,63 +46,25 @@ public class ShopList extends ActionBarActivity {
             finish();
             return;
         }
-        mAuth = FirebaseAuth.getInstance();
         userID = mAuth.getCurrentUser().getUid();
         firebaseFirestore = FirebaseFirestore.getInstance();
         sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
-
         collectionReference = firebaseFirestore.collection("stores");
         recyclerView = findViewById(R.id.recyclerview1);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         getCategory();
         getproducts();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        getUserDetails();
         ShopAdapter.shopid.clear();
     }
 
-    public void setSharedPreferences() {
-        sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("userid", userID);
-        editor.putString("cartstoreid", cartstoreid);
-        editor.putString("username", username);
-        editor.putString("phone", phone);
-        editor.commit();
-    }
 
-    public void getUserDetails() {
-        documentReference = firebaseFirestore.collection("customers").document(userID);
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    username = (String) document.get("username");
-                    phone = (String) document.get("phone");
-                    setSharedPreferences();
-                }
-
-            }
-        });
-        documentReference.collection("cart").document("cart").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {                                                                      //gets the storeid in cart
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        cartstoreid = (String) document.get("storeid");
-                        setSharedPreferences();
-                    }
-                }
-            }
-        });
-
-    }
  private void getproducts() {
 
         Query query = collectionReference.orderBy("storename", Query.Direction.ASCENDING);
@@ -113,6 +75,7 @@ public class ShopList extends ActionBarActivity {
        adapter = new ShopAdapter(options);
        recyclerView.setAdapter(adapter);
     }
+
     private void getCategory(){
 
             cNames.add("General Store");
@@ -132,8 +95,7 @@ public class ShopList extends ActionBarActivity {
         cImages.add(R.drawable.ic_action_restaurent);
 
         RecyclerView recyclerView1 = findViewById(R.id.category);
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView1.setLayoutManager(layoutManager);
         recyclerView1.setHasFixedSize(true);
         CategoryAdapter categoryAdapter = new CategoryAdapter(cNames,cImages);

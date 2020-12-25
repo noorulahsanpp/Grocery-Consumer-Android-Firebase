@@ -35,40 +35,43 @@ import com.squareup.picasso.Picasso;
 
 public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAdapter.ProductHolder> {
 
-   static   FirebaseFirestore firebaseFirestore;
-   static CollectionReference collectionReference ;
+    static FirebaseFirestore firebaseFirestore;
+    static CollectionReference collectionReference ;
     static ArrayList<String> prdtname = new ArrayList<>();
-    static  ArrayList<String> prdtnum = new ArrayList<>();
+    static ArrayList<String> prdtnum = new ArrayList<>();
     static ArrayList<String> prdtimages = new ArrayList<>();
-     static ArrayList<String> prdtimageurl = new ArrayList<>();
+    static ArrayList<String> prdtimageurl = new ArrayList<>();
     static ArrayList<String> prdtprices = new ArrayList<>();
-    static  String storeid,userId,cartstoreid = "",cartid="";
-    Integer quantity;
-    static  Integer flag1 =0;
+    static String storeid,userId,cartstoreid;
+    static Integer flag1 =0;
     static Date date = setDate();
-    public ProductAdapter(@NonNull FirestoreRecyclerOptions<Product> options, String cartstoreid, String storeid, String userId) {
-        super(options);
+    Integer quantity;
 
+
+    public ProductAdapter(@NonNull FirestoreRecyclerOptions<Product> options, String storeid, String userId) {
+
+        super(options);
         this.storeid = storeid;
         this.userId = userId;
-        this.cartstoreid = cartstoreid;
         firebaseFirestore = FirebaseFirestore.getInstance();
         collectionReference = firebaseFirestore.collection("customers").document(userId).collection("cart");
+        // cart id is set on actionBar activity
         if(!cartstoreid.equals(storeid)){
+            //clears array if the current store not present in cart
             prdtname.clear();
-            prdtnum.clear();                        //clears array if store not present in cart
+            prdtnum.clear();
             prdtimages.clear();
             prdtprices.clear();
             prdtimageurl.clear();
-            cartid=cartstoreid;
                }
         else
         {
-            getCartProducts();      //to call the cart products if present
+            //to call the cart products if present
+            getCartProducts();
         }
         try {
             //set time in mili
-            Thread.sleep(250);
+            Thread.sleep(700);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -86,6 +89,7 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
         prdtimageurl.add(imageUrl);
         Picasso.get().load(imageUrl).into(holder.imageIv);
         holder.editBtn.setRange(0,quantity);
+
         if (prdtnum.size()!= 0) {
             for (int i = 0; i < prdtnum.size(); i++) {
                 if (topic.equals(prdtname.get(i))) {
@@ -118,9 +122,7 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
     @NonNull
     @Override
     public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.product_recyclerview, parent, false);
-
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_recyclerview, parent, false);
         return new ProductHolder(view);
     }
 
@@ -145,23 +147,21 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
             editBtn= itemView.findViewById(R.id.editbutton);
 
 
-
             addBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(!cartid.equals("")){// value in cart
-                        flag1 = 1;
-                    }
-                    if(flag1 == 1){
-                        if (storeid.equals(cartid)) {
-                           setnewitems();
+                        if (!cartstoreid.equals("")) {// value in cart
+                            flag1 = 1;
+                        }
+                        if (flag1 == 1) {
+                            if (storeid.equals(cartstoreid)) {
+                                setnewitems();
+                            } else {
+                                AskOption();
+                            }
                         } else {
-                            AskOption();
-                        }}
-                    else{
-                       setnewitems();
-                    }
-
+                            setnewitems();
+                        }
                 }
             });
 
@@ -193,7 +193,6 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
                             prdtprices.add(p);
                             prdtimages.add(i);
                         }
-
                     }
 
                     if (newValue == 0) {
@@ -210,7 +209,6 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
                             }
                         }
                     }
-
                 }
 
 
@@ -230,7 +228,9 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
             });
 
         }
+
         public void setnewitems(){
+
             addBtn.setEnabled(false);
             editBtn.setEnabled(true);
             editBtn.setNumber("1");
@@ -243,7 +243,9 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
             prdtprices.add(p);
             prdtimages.add(i);
         }
+
         public void AskOption() {
+
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(itemView.getContext());
             alertDialog.setMessage("Do you want to clear your cart and add new items ");
             alertDialog.setPositiveButton("NO", new DialogInterface.OnClickListener() {
@@ -255,23 +257,18 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
             alertDialog.setNegativeButton("YES", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    cartid = storeid;
+                    cartstoreid = storeid;
                   setnewitems();
-                  flag1 =0;
+                    ActionBarActivity.getquantity();
                     deletecart();
                 }
             });
-
             AlertDialog dialog = alertDialog.create();
             dialog.show();
         }
-
     }
 
     public static void setProducts() {
-        FirebaseFirestore firebaseFirestore;
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        final CollectionReference collectionReference ;
         collectionReference = firebaseFirestore.collection("customers").document(userId).collection("cart");
         if(!prdtname.isEmpty()){
 
@@ -289,7 +286,7 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
                         products.put("status", "added to cart");
                         collectionReference.document("cart").set(products);
                     }
-                    ActionBarActivity.getquantity();
+                    ActionBarActivity.getquantity();            //change badge when add to cart clicked
                     getCartProducts();
                 }
 
@@ -309,8 +306,8 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        cartid="";
-
+                      //  cartstoreid="";
+                        flag1 =0;
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -322,6 +319,7 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
     }
 
     public static Date setDate(){
+
         Calendar start = Calendar.getInstance();
         start.setTime(new Date());
         start.set(Calendar.HOUR_OF_DAY, 0);
@@ -331,7 +329,9 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
         Date today = start.getTime();
         return today;
     }
+
     public static void getCartProducts(){
+
         collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -341,18 +341,13 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
                         prdtnum = (ArrayList<String>) document.get("itemno");
                         prdtprices = (ArrayList<String>) document.get("price");
                         prdtimages = (ArrayList<String>) document.get("image");
-                        cartid = document.get("storeid").toString();
                     }
                 }
-
             }
-
-
         });
-
     }
 
-    }
+}
 
 
 

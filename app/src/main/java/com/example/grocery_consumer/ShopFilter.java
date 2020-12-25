@@ -19,8 +19,10 @@ public class ShopFilter extends AppCompatActivity {
     public static CollectionReference collectionReference;
     RecyclerView recyclerView;
     String category;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_filter);
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -32,17 +34,19 @@ public class ShopFilter extends AppCompatActivity {
         getproducts();
 
     }
+
     private void getproducts() {
+
         collectionReference = firebaseFirestore.collection("stores");
         Query query = collectionReference.whereEqualTo("category",category);
         FirestoreRecyclerOptions<Shops> options = new FirestoreRecyclerOptions.Builder<Shops>()
                 .setQuery(query, Shops.class)
                 .build();
-
         adapter = new ShopAdapter(options);
         recyclerView.setAdapter(adapter);
 
     }
+
     @Override
     public void onStart() {
         super.onStart();
