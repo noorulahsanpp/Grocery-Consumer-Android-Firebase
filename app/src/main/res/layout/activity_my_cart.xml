@@ -21,6 +21,7 @@
         android:layout_centerHorizontal="true"
         android:textColor="@color/blue"
         android:text="Click here to view Previous Orders"
+        android:clickable="true"
         android:textSize="20dp"/>
 <ScrollView
     android:layout_width="match_parent"

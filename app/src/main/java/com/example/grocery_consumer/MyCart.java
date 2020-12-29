@@ -83,12 +83,12 @@ public class MyCart extends AppCompatActivity{
     }
 
     public void init(){
-            oldcartTv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(new Intent(getApplicationContext(), PreviousOrders.class));
-                }
-            });
+        oldcartTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), PreviousOrders.class));
+            }
+        });
             placeorderBTn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -114,6 +114,7 @@ public class MyCart extends AppCompatActivity{
                     ProductAdapter.prdtnum.clear();
                     ProductAdapter.prdtimages.clear();
                     ProductAdapter.prdtprices.clear();
+                    ProductAdapter.flag1=0;
                     finish();
                 }
 
@@ -154,10 +155,6 @@ public class MyCart extends AppCompatActivity{
     public static Date setDate(){
         Calendar start = Calendar.getInstance();
         start.setTime(new Date());
-        start.set(Calendar.HOUR_OF_DAY, 0);
-        start.set(Calendar.MINUTE, 0);
-        start.set(Calendar.SECOND, 0);
-        start.set(Calendar.MILLISECOND, 0);
         Date today = start.getTime();
         return today;
     }

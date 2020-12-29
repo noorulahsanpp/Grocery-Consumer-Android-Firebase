@@ -40,11 +40,13 @@ public class ProductList extends ActionBarActivity {
         storeid = intent.getExtras().get("storeid").toString();
         collectionReference = firebaseFirestore.collection("stores").document(storeid).collection("products");
         getproducts();
+        ShopList.getInstance().finish();
     }
     @Override
     protected void onResume() {
         super.onResume();
         getUserDetails();       // to set the id of store in cart on each loads
+       // getquantity();
         ProductAdapter.prdtimageurl.clear();
     }
 
@@ -86,4 +88,10 @@ public class ProductList extends ActionBarActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        startActivity(new Intent(this,ShopList.class));
+    }
 }

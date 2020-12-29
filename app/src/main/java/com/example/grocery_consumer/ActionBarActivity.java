@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -45,7 +47,6 @@ public class ActionBarActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         userID = mAuth.getCurrentUser().getUid();
-        getUserDetails();
     }
 
     @Override
@@ -62,6 +63,8 @@ public class ActionBarActivity extends AppCompatActivity {
                 onOptionsItemSelected(menuItem);
             }
         });
+        getUserDetails();
+
         return true;
     }
 
@@ -75,11 +78,6 @@ public class ActionBarActivity extends AppCompatActivity {
         editor.commit();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getquantity();
-    }
 
     public void getUserDetails() {
 
@@ -111,6 +109,12 @@ public class ActionBarActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getquantity();
     }
 
     @Override

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,7 +51,7 @@ public class PreviousOrders extends AppCompatActivity {
 
     public void getPreviousOrder(){
 
-       Query query =collectionReference.orderBy("date", Query.Direction.ASCENDING);
+       Query query =collectionReference.orderBy("date", Query.Direction.DESCENDING);
        query.get().addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
