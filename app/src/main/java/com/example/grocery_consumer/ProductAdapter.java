@@ -220,8 +220,10 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
                     setProducts();
                     if (prdtname.isEmpty()) {
                         Toast.makeText(view.getContext(), "Please add items", Toast.LENGTH_SHORT).show();
+                        ActionBarActivity.getquantity();
                     } else {
                         Toast.makeText(view.getContext(), "Items added to cart", Toast.LENGTH_SHORT).show();
+
                     }
                 }
 
@@ -322,10 +324,6 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
 
         Calendar start = Calendar.getInstance();
         start.setTime(new Date());
-        start.set(Calendar.HOUR_OF_DAY, 0);
-        start.set(Calendar.MINUTE, 0);
-        start.set(Calendar.SECOND, 0);
-        start.set(Calendar.MILLISECOND, 0);
         Date today = start.getTime();
         return today;
     }

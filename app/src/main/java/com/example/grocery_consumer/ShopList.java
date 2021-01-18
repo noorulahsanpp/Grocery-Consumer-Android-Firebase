@@ -21,7 +21,7 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 
 public class ShopList extends ActionBarActivity {
-
+    static ShopList activityA;
     public static final String MyPREFERENCES = "MyPrefs";
     SharedPreferences sharedPreferences;
     private ShopAdapter adapter;
@@ -37,7 +37,6 @@ public class ShopList extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shops);
-
         mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() == null) {
             Intent intent = new Intent(ShopList.this, UserLogin.class);
@@ -46,6 +45,7 @@ public class ShopList extends ActionBarActivity {
             finish();
             return;
         }
+        activityA = this;
         userID = mAuth.getCurrentUser().getUid();
         firebaseFirestore = FirebaseFirestore.getInstance();
         sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
@@ -61,9 +61,12 @@ public class ShopList extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        ActionBarActivity.getquantity();
         ShopAdapter.shopid.clear();
     }
-
+    public static ShopList getInstance(){
+        return   activityA;
+    }
 
  private void getproducts() {
 
@@ -115,6 +118,5 @@ public class ShopList extends ActionBarActivity {
         super.onStop();
         adapter.stopListening();
     }
-
 
 }
