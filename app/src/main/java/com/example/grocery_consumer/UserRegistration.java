@@ -38,6 +38,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -136,7 +137,6 @@ public class UserRegistration extends AppCompatActivity {
         });
     }
 
-
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -176,9 +176,6 @@ public class UserRegistration extends AppCompatActivity {
         });
     }
 
-
-
-
     public void saveData() {
         try {
             DocumentReference customer = firebaseFirestore.collection("customers").document(userId + "");
@@ -200,8 +197,8 @@ public class UserRegistration extends AppCompatActivity {
                     Toast.makeText(UserRegistration.this, "Something went wrong. Please try again later.", Toast.LENGTH_SHORT).show();
                 }
             });
-            locationinfo.put("altitude", latitudeLOC);
-            locationinfo.put("longitude", longitudeLOC);
+            GeoPoint geoPoint = new GeoPoint(Double.parseDouble(latitudeLOC), Double.parseDouble(longitudeLOC));
+            locationinfo.put("position", geoPoint);
             location.set(locationinfo).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -240,10 +237,5 @@ public class UserRegistration extends AppCompatActivity {
     public void getData() {
         uName = nameET.getText().toString().trim();
         uLocation = locationET.getText().toString().trim();
-
-
-
 }
-
-
     }

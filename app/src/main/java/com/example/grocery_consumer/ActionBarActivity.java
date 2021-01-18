@@ -43,6 +43,13 @@ public class ActionBarActivity extends AppCompatActivity {
         setTitle("Purchase");
         setContentView(R.layout.badgelayout);
         mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() == null) {
+            Intent intent = new Intent(ActionBarActivity.this, UserLogin.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
         firebaseFirestore = FirebaseFirestore.getInstance();
         userID = mAuth.getCurrentUser().getUid();
         getUserDetails();
