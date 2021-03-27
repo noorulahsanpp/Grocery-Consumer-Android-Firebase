@@ -109,13 +109,14 @@ public class MyCart extends AppCompatActivity{
 
                                 }
                             });
-                    Toast.makeText(getApplicationContext(), "Your Order is placed.", Toast.LENGTH_LONG).show();
+
                     ProductAdapter.prdtname.clear();
                     ProductAdapter.prdtnum.clear();
                     ProductAdapter.prdtimages.clear();
                     ProductAdapter.prdtprices.clear();
                     ProductAdapter.flag1=0;
-                    finish();
+                    startActivity(new Intent(getApplicationContext(), OrderPlaced.class));
+
                 }
 
             });
