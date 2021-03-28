@@ -75,7 +75,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
                      cartvalue = cartvalue +pdtprice;
                      MyCart.cartvalueTv.setText("₹ "+cartvalue);
                      total = total+discount+pdtprice;
-                     MyCart.totalTv.setText("₹ "+total);
+                     MyCart.totalTv.setText(""+total);
     }
 
     @Override

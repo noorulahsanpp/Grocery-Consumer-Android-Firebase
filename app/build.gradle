@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.grocery_consumer"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -57,4 +57,5 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.firebaseui:firebase-ui-firestore:6.1.0'
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
+    implementation 'com.razorpay:checkout:1.5.16'
 }

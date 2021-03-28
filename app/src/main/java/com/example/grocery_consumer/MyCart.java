@@ -7,6 +7,7 @@ import androidx.collection.ArraySet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.appwidget.AppWidgetHost;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +26,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,7 +34,11 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.razorpay.Checkout;
+import com.razorpay.PaymentResultListener;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,7 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyCart extends AppCompatActivity{
+public class MyCart extends AppCompatActivity implements PaymentResultListener {
 
     public static final String MyPREFERENCES = "MyPrefs" ;
     SharedPreferences sharedPreferences;
@@ -60,7 +66,7 @@ public class MyCart extends AppCompatActivity{
     ArrayList<String> prices = new ArrayList<>();
     ArrayList<String> name = new ArrayList<>();
     ArrayList<String> itemno = new ArrayList<>();
-
+    private TextView gtotal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,36 +98,54 @@ public class MyCart extends AppCompatActivity{
             placeorderBTn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    setOldcart();
-                    setPlaceorder();
-                    collectionReference = firebaseFirestore.collection("customers").document(userId).collection("cart");
-                    collectionReference.document("cart")
-                            .delete()
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
 
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-
-                                }
-                            });
-
-                    ProductAdapter.prdtname.clear();
-                    ProductAdapter.prdtnum.clear();
-                    ProductAdapter.prdtimages.clear();
-                    ProductAdapter.prdtprices.clear();
-                    ProductAdapter.flag1=0;
-                    startActivity(new Intent(getApplicationContext(), OrderPlaced.class));
-
+                    startPayment();
                 }
 
             });
 
         }
+    public void startPayment() {
+        float grandtotal = 0;
+        grandtotal = Float.parseFloat(totalTv.getText().toString())*100;
+        Checkout checkout = new Checkout();
+        checkout.setKeyID("rzp_test_NoNpIryvAqtM1p");
+        /**
+         * Instantiate Checkout
+         */
+
+
+        /**
+         * Set your logo here
+         */
+//        checkout.setImage(R.drawable.logo);
+
+        /**
+         * Reference to current activity
+         */
+        final Activity activity = this;
+
+        /**
+         * Pass your payment options to the Razorpay Checkout as a JSONObject
+         */
+        try {
+            JSONObject options = new JSONObject();
+
+            options.put("name", "Grocery");
+            options.put("description", "Customer : "+userId );
+            options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.png");
+//            options.put("order_id", "order_DBJOWzybf0sJbb");//from response of step 3.
+            options.put("theme.color", "#3399cc");
+            options.put("currency", "INR");
+            options.put("amount", grandtotal+"");//pass amount in currency subunits
+            options.put("prefill.email", "samplemail@sample.com");
+            options.put("prefill.contact","9988774455");
+            checkout.open(activity, options);
+        } catch(Exception e) {
+//            Log.e(TAG, "Error in starting Razorpay Checkout", e);
+        }
+    }
+
 
         public void setOldcart(){
             collectionReference = firebaseFirestore.collection("customers").document(userId).collection("oldcart");
@@ -249,4 +273,37 @@ public class MyCart extends AppCompatActivity{
         phone = sharedPreferences.getString("phone", "");
     }
 
+    @Override
+    public void onPaymentSuccess(String s) {
+
+        setOldcart();
+        setPlaceorder();
+        collectionReference = firebaseFirestore.collection("customers").document(userId).collection("cart");
+        collectionReference.document("cart")
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
+        ProductAdapter.prdtname.clear();
+        ProductAdapter.prdtnum.clear();
+        ProductAdapter.prdtimages.clear();
+        ProductAdapter.prdtprices.clear();
+        ProductAdapter.flag1=0;
+        startActivity(new Intent(getApplicationContext(), OrderPlaced.class));
+    }
+
+    @Override
+    public void onPaymentError(int i, String s) {
+        Toast.makeText(this, "Payment Failed", Toast.LENGTH_LONG).show();
+    }
 }
