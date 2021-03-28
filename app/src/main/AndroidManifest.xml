@@ -21,7 +21,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".OTP"></activity>
+        <activity android:name=".OrderPlaced" android:theme="@style/AppTheme.PopMe"/>
+        <activity android:name=".OTP" android:theme="@style/AppTheme.PopMe"/>
         <activity android:name=".PreviousOrders" />
         <activity android:name=".ShopFilter" />
         <activity android:name=".ShopList">
@@ -33,7 +34,7 @@
         </activity>
         <activity android:name=".ProductList" />
         <activity android:name=".MyCart" />
-        <activity android:name=".UserLogin" />
+        <activity android:name=".UserLogin" >     </activity>
         <activity android:name=".UserRegistration" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

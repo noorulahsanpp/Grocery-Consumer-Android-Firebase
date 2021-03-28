@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -35,9 +36,9 @@ public class PreviousOrders extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_previous_orders);
+        setTitle("Previous Orders");
         getSharedPreference();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
        rvItem = findViewById(R.id.rv_item);
