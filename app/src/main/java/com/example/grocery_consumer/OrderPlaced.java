@@ -19,10 +19,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.example.grocery_consumer.MyCart.orderedID;
+
 public class OrderPlaced extends AppCompatActivity {
 
     Button doneBTN;
-    TextView timeTV;
+    TextView timeTV, tokenTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +38,12 @@ public class OrderPlaced extends AppCompatActivity {
         popup();
         Calendar calendar = Calendar.getInstance();
         timeTV = findViewById(R.id.time);
+        tokenTV = findViewById(R.id.token);
         DateFormat dateFormat = new SimpleDateFormat("hh.mm aa");
         calendar.add(Calendar.MINUTE, 10);
         String newTime = dateFormat.format(calendar.getTime());
         timeTV.setText(newTime);
+        tokenTV.setText("Token : "+orderedID.substring(orderedID.length()-2));
         doneBTN = findViewById(R.id.done);
         doneBTN.setOnClickListener(new View.OnClickListener() {
             @Override

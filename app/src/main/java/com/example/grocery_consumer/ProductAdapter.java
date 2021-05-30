@@ -1,20 +1,15 @@
 package com.example.grocery_consumer;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
-
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -115,7 +110,6 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
             holder.editBtn.setNumber("0");
             holder.editBtn.setEnabled(false);
             holder.addBtn.setEnabled(true);
-
         }
     }
 
@@ -139,14 +133,11 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
 
         public ProductHolder(View itemView) {
             super(itemView);
-
             topicTv = itemView.findViewById(R.id.itemname);
             priceTv = itemView.findViewById(R.id.itemprice);
             imageIv = itemView.findViewById(R.id.itemimage);
             addBtn = itemView.findViewById(R.id.itemadd);
             editBtn= itemView.findViewById(R.id.editbutton);
-
-
             addBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -164,11 +155,9 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
                         }
                 }
             });
-
             editBtn.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
                 @Override
                 public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
-
                     value = String.valueOf(newValue);
                     p = (String) priceTv.getText();
                     i = prdtimageurl.get(getAdapterPosition());
@@ -223,12 +212,10 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
                         ActionBarActivity.getquantity();
                     } else {
                         Toast.makeText(view.getContext(), "Items added to cart", Toast.LENGTH_SHORT).show();
-
                     }
                 }
 
             });
-
         }
 
         public void setnewitems(){
@@ -247,7 +234,6 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
         }
 
         public void AskOption() {
-
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(itemView.getContext());
             alertDialog.setMessage("Do you want to clear your cart and add new items ");
             alertDialog.setPositiveButton("NO", new DialogInterface.OnClickListener() {
@@ -273,7 +259,6 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
     public static void setProducts() {
         collectionReference = firebaseFirestore.collection("customers").document(userId).collection("cart");
         if(!prdtname.isEmpty()){
-
             collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -293,7 +278,6 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
                 }
 
             });
-
         }
         else {
             deletecart();
@@ -302,20 +286,12 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
 
 
     public static void deletecart(){
-
         collectionReference.document("cart")
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                      //  cartstoreid="";
                         flag1 =0;
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
                     }
                 });
     }
@@ -329,7 +305,6 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
     }
 
     public static void getCartProducts(){
-
         collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -344,7 +319,6 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
             }
         });
     }
-
 }
 
 

@@ -1,10 +1,7 @@
 package com.example.grocery_consumer;
 
-
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-
 
 public class PreviousItem {
 
@@ -18,7 +15,6 @@ public class PreviousItem {
     Date date;
 
     public PreviousItem() {
-
     }
 
     public PreviousItem(String storename, String orderid, String description, ArrayList<String> name, ArrayList<String> itemno, ArrayList<String> image, ArrayList<String> price, Date date ) {

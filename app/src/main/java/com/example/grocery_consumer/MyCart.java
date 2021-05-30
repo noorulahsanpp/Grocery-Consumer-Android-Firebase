@@ -1,26 +1,19 @@
 package com.example.grocery_consumer;
 
-import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.collection.ArraySet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
-import android.appwidget.AppWidgetHost;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,24 +21,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
 import com.squareup.picasso.Picasso;
-
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MyCart extends AppCompatActivity implements PaymentResultListener {
@@ -67,6 +51,7 @@ public class MyCart extends AppCompatActivity implements PaymentResultListener {
     ArrayList<String> name = new ArrayList<>();
     ArrayList<String> itemno = new ArrayList<>();
     private TextView gtotal;
+    static String orderedID = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,12 +83,9 @@ public class MyCart extends AppCompatActivity implements PaymentResultListener {
             placeorderBTn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     startPayment();
                 }
-
             });
-
         }
     public void startPayment() {
         float grandtotal = 0;
@@ -145,8 +127,6 @@ public class MyCart extends AppCompatActivity implements PaymentResultListener {
 //            Log.e(TAG, "Error in starting Razorpay Checkout", e);
         }
     }
-
-
         public void setOldcart(){
             collectionReference = firebaseFirestore.collection("customers").document(userId).collection("oldcart");
             Map<String, Object> products = new HashMap<>();
@@ -161,7 +141,6 @@ public class MyCart extends AppCompatActivity implements PaymentResultListener {
             products.put("status", "order placed");
             collectionReference.document().set(products);
         }
-
     public void setPlaceorder(){
         collectionReference = firebaseFirestore.collection("stores").document(storeid).collection("order");
         Map<String, Object> products = new HashMap<>();
@@ -174,7 +153,35 @@ public class MyCart extends AppCompatActivity implements PaymentResultListener {
         products.put("phone",phone);
         products.put("price", prices);
         products.put("status", "order placed");
-        collectionReference.document().set(products);
+        collectionReference.add(products).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                orderedID = documentReference.getId();
+                orderedID = documentReference.getId();
+                collectionReference = firebaseFirestore.collection("customers").document(userId).collection("cart");
+                collectionReference.document("cart")
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+
+                ProductAdapter.prdtname.clear();
+                ProductAdapter.prdtnum.clear();
+                ProductAdapter.prdtimages.clear();
+                ProductAdapter.prdtprices.clear();
+                ProductAdapter.flag1=0;
+                startActivity(new Intent(getApplicationContext(), OrderPlaced.class));
+            }
+        });
     }
 
     public static Date setDate(){
@@ -265,7 +272,6 @@ public class MyCart extends AppCompatActivity implements PaymentResultListener {
     }
 
     public void getSharedPreference(){
-
         sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
         userId = sharedPreferences.getString("userid", "");
         storeid = sharedPreferences.getString("storeid","");
@@ -275,31 +281,8 @@ public class MyCart extends AppCompatActivity implements PaymentResultListener {
 
     @Override
     public void onPaymentSuccess(String s) {
-
         setOldcart();
         setPlaceorder();
-        collectionReference = firebaseFirestore.collection("customers").document(userId).collection("cart");
-        collectionReference.document("cart")
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
-
-        ProductAdapter.prdtname.clear();
-        ProductAdapter.prdtnum.clear();
-        ProductAdapter.prdtimages.clear();
-        ProductAdapter.prdtprices.clear();
-        ProductAdapter.flag1=0;
-        startActivity(new Intent(getApplicationContext(), OrderPlaced.class));
     }
 
     @Override

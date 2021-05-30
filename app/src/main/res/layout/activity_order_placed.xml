@@ -42,6 +42,18 @@
             android:textStyle="bold"
             android:textSize="20dp"
             android:text=""/>
+        <TextView
+            android:layout_width="350dp"
+            android:id="@+id/token"
+            android:layout_marginTop="35dp"
+            android:layout_below="@+id/orderplaced"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="#605D5D"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:text=""/>
 
 
         <Button

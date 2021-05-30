@@ -2,7 +2,6 @@ package com.example.grocery_consumer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,7 +33,6 @@ import java.util.concurrent.TimeUnit;
 
 public class OTP extends AppCompatActivity {
     private static final String TAG = "OTP";
-
     private Button verifyBT;
     private EditText verifyET;
     private ProgressDialog progressDialog;
@@ -52,7 +49,6 @@ public class OTP extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_o_t_p);
         popup();
-
         verifyBT = findViewById(R.id.button15);
         verifyET = findViewById(R.id.editText5);
         progressDialog = new ProgressDialog(this);
@@ -156,12 +152,9 @@ public class OTP extends AppCompatActivity {
                 } else {
                     Toast.makeText(OTP.this, task.getException().getMessage(), Toast.LENGTH_LONG);
                 }
-
             }
         });
     }
-
-
     private void popup() {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);

@@ -3,10 +3,8 @@ package com.example.grocery_consumer;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
-
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,10 +17,8 @@ public class ShopFilter extends AppCompatActivity {
     public static CollectionReference collectionReference;
     RecyclerView recyclerView;
     String category;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_filter);
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -32,11 +28,9 @@ public class ShopFilter extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         category= intent.getExtras().get("category").toString();
         getproducts();
-
     }
 
     private void getproducts() {
-
         collectionReference = firebaseFirestore.collection("stores");
         Query query = collectionReference.whereEqualTo("category",category);
         FirestoreRecyclerOptions<Shops> options = new FirestoreRecyclerOptions.Builder<Shops>()
@@ -44,7 +38,6 @@ public class ShopFilter extends AppCompatActivity {
                 .build();
         adapter = new ShopAdapter(options);
         recyclerView.setAdapter(adapter);
-
     }
 
     @Override

@@ -2,15 +2,12 @@ package com.example.grocery_consumer;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -79,14 +76,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     LatLng kerala = new LatLng(10.8505, 76.2711);
                     mMap.addMarker(new MarkerOptions().position(lng).title("Grocery Stores"));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 10));
-//                    mMap.animateCamera(CameraUpdateFactory.zoomIn());
-//                    CameraPosition cameraPosition = new CameraPosition.Builder()
-//                            .target(kerala )      // Sets the center of the map to Mountain View
-//                            .zoom(10)                   // Sets the zoom
-//                            .bearing(90)                // Sets the orientation of the camera to east
-//                            .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-//                            .build();                   // Creates a CameraPosition from the builder
-//                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
             }
         });

@@ -1,19 +1,14 @@
 package com.example.grocery_consumer;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.content.Intent;
-
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.ArrayList;
-;
 import java.util.List;
-
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.squareup.picasso.Picasso;
@@ -51,11 +46,8 @@ public class ShopAdapter extends FirestoreRecyclerAdapter<Shops, ShopAdapter.Sho
         TextView shplaceTv;
         ImageView shimageIv;
         TextView shcategoryTv;
-
-
         public ShopHolder(View itemView) {
             super(itemView);
-
             itemView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -65,8 +57,6 @@ public class ShopAdapter extends FirestoreRecyclerAdapter<Shops, ShopAdapter.Sho
                     view.getContext().startActivity(i);
                 }
             });
-
-
             shnameTv = itemView.findViewById(R.id.shopsname);
             shplaceTv = itemView.findViewById(R.id.shopplace);
             shimageIv = itemView.findViewById(R.id.shopimage);

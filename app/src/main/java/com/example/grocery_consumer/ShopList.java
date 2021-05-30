@@ -1,25 +1,15 @@
 package com.example.grocery_consumer;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.widget.Toast;
-
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-
 import java.util.ArrayList;
 
 public class ShopList extends ActionBarActivity {
@@ -55,7 +45,6 @@ public class ShopList extends ActionBarActivity {
         recyclerView = findViewById(R.id.recyclerview1);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         getCategory();
         getproducts();
     }
@@ -71,25 +60,22 @@ public class ShopList extends ActionBarActivity {
     }
 
  private void getproducts() {
-
         Query query = collectionReference.orderBy("storename", Query.Direction.ASCENDING);
         FirestoreRecyclerOptions<Shops> options = new FirestoreRecyclerOptions.Builder<Shops>()
                 .setQuery(query, Shops.class)
                 .build();
-
        adapter = new ShopAdapter(options);
        recyclerView.setAdapter(adapter);
     }
 
     private void getCategory(){
-
             cNames.add("General Store");
             cNames.add("Vegetables and Fruits");
             cNames.add("Electronics and Home Appliances");
             cNames.add("Groceries");
             cNames.add("Fish and Meat");
             cNames.add("Bakery");
-            cNames.add("Restaurent");
+            cNames.add("Restaurant");
 
         cImages.add(R.drawable.ic_action_store);
         cImages.add(R.drawable.ic_action_store);
@@ -105,29 +91,20 @@ public class ShopList extends ActionBarActivity {
         recyclerView1.setHasFixedSize(true);
         CategoryAdapter categoryAdapter = new CategoryAdapter(cNames,cImages);
         recyclerView1.setAdapter(categoryAdapter);
-
     }
-
-
     @Override
     public void onStart() {
         super.onStart();
         adapter.startListening();
     }
-
-
     @Override
     public void onStop() {
         super.onStop();
         adapter.stopListening();
     }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
         finish();
-
     }
-
 }

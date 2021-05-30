@@ -1,10 +1,8 @@
 package com.example.grocery_consumer;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,16 +18,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,25 +34,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public class UserRegistration extends AppCompatActivity {
-
-
     private static final String TAG = "UserRegistration";
     private static final int REQUEST_LOCATION = 1;
-
     private ImageView photo;
     private EditText phoneET, nameET, locationET;
     private Button signUpBtn, currentLocationBTN;
@@ -67,40 +52,29 @@ public class UserRegistration extends AppCompatActivity {
     private TextView register;
     private String uName = "", uLocation = "", saveCurrentDate, saveCurrentTime, downloadImageUrl;
     private String phoneNo, userId;
-
-
     private Uri imageUri;
-
     private FirebaseAuth mAuth;
     private FirebaseFirestore firebaseFirestore;
     private StorageReference mStorageRef;
     private FirebaseUser user;
-
     private String latitudeLOC, longitudeLOC;
     private LocationManager locationManager;
-
     private boolean gps_Enabled = false;
     private boolean network_Enabled = false;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
-
     Geocoder geocoder;
     List<Address> getAddress;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE); //will hide the title
         getSupportActionBar().hide();
         setContentView(R.layout.activity_user_registration);
-
         progressDialog = new ProgressDialog(this);
         initWidgets();
-
         phoneNo = getIntent().getStringExtra("phoneNo");
         phoneET.setText(phoneNo);
-
         mStorageRef = FirebaseStorage.getInstance().getReference();
         firebaseFirestore = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -108,8 +82,6 @@ public class UserRegistration extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-
         userId = mAuth.getUid();
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +94,6 @@ public class UserRegistration extends AppCompatActivity {
                 if (validate(uName,uLocation)) {
                     saveData();
                 }
-
             }
         });
         currentLocationBTN.setOnClickListener(new View.OnClickListener() {
@@ -215,15 +186,17 @@ public class UserRegistration extends AppCompatActivity {
         if (TextUtils.isEmpty(name)) {
             nameET.setError("Input name");
             nameET.requestFocus();
+            progressDialog.dismiss();
             return false;
         } else if (TextUtils.isEmpty(location)) {
             locationET.setError("Input Location");
             locationET.requestFocus();
+            Toast.makeText(getApplicationContext(), "Please choose location", Toast.LENGTH_LONG).show();
+            progressDialog.dismiss();
             return false;
         }
         return true;
     }
-
     private void initWidgets() {
         Log.d(TAG, "initWidgets: Initialising widgets");
         signUpBtn = findViewById(R.id.button4);

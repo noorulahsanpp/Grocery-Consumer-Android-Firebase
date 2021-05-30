@@ -4,21 +4,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,16 +49,12 @@ public class PreviousAdapter extends FirestoreRecyclerAdapter<PreviousItem, Prev
         itemViewHolder.rvSubItem.setLayoutManager(gridLayoutManager);
         previousSubAdapter = new PreviousSubAdapter(itemname, quantity, images, prices);
         itemViewHolder.rvSubItem.setAdapter(previousSubAdapter);
-
     }
-
-
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item, viewGroup, false);
         try {
-            //set time in mili
             Thread.sleep(500);
 
         }catch (Exception e){
@@ -76,11 +62,6 @@ public class PreviousAdapter extends FirestoreRecyclerAdapter<PreviousItem, Prev
         }
         return new ItemViewHolder(view);
     }
-
-
-
-
-
     class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView tvItemTitle,tvdescription;
         private RecyclerView rvSubItem;
@@ -94,9 +75,6 @@ public class PreviousAdapter extends FirestoreRecyclerAdapter<PreviousItem, Prev
             rvSubItem = itemView.findViewById(R.id.rv_sub_item);
             tvDate = itemView.findViewById(R.id.date);
             tvTotal = itemView.findViewById(R.id.total);
-
         }
     }
-
-
 }

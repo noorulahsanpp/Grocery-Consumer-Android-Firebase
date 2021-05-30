@@ -3,17 +3,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
-
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -46,7 +39,6 @@ public class ProductList extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         getUserDetails();       // to set the id of store in cart on each loads
-       // getquantity();
         ProductAdapter.prdtimageurl.clear();
     }
 
@@ -57,9 +49,6 @@ public class ProductList extends ActionBarActivity {
     recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
     recyclerView.setHasFixedSize(true);
 }
-
-
-
     private void getproducts() {
         Query query =collectionReference.orderBy("name", Query.Direction.ASCENDING);
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
@@ -67,10 +56,7 @@ public class ProductList extends ActionBarActivity {
                 .build();
          adapter = new ProductAdapter(options,storeid,userId);
          recyclerView.setAdapter(adapter);
-
     }
-
-
     @Override
     public void onStart() {
         super.onStart();
@@ -85,7 +71,6 @@ public class ProductList extends ActionBarActivity {
     public void getSharedPreference(){
         sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
         userId = sharedPreferences.getString("userid", "");
-
     }
 
     @Override

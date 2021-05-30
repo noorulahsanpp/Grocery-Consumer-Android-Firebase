@@ -6,12 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
 public class PreviousSubAdapter extends RecyclerView.Adapter<PreviousSubAdapter.SubItemViewHolder> {
@@ -42,9 +39,7 @@ public class PreviousSubAdapter extends RecyclerView.Adapter<PreviousSubAdapter.
     @Override
     public SubItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_sub_item, viewGroup, false);
-
         return new SubItemViewHolder(view);
-
     }
     @Override
     public int getItemCount() {
@@ -54,12 +49,10 @@ public class PreviousSubAdapter extends RecyclerView.Adapter<PreviousSubAdapter.
     static class SubItemViewHolder extends RecyclerView.ViewHolder {
         ImageView itemimage;
         TextView productname;
-
         SubItemViewHolder(View itemView) {
             super(itemView);
             itemimage = itemView.findViewById(R.id.itemimage);
             productname = itemView.findViewById(R.id.productname);
-
         }
     }
 }
